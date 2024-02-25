@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="ChaptersMobileApp.RegistrationPage"
+             Title="Регистрация">
+    <ContentPage.Content>
+        <StackLayout>
+            <Entry Text="{Binding Username}" Placeholder="Имя пользователя" />
+            <!-- Add other entry fields for Password, Email, etc. -->
+            <Button Command="{Binding RegisterCommand}" Text="Зарегистрироваться" />
+        </StackLayout>
+    </ContentPage.Content>
+</ContentPage>
