@@ -7,6 +7,7 @@ namespace ChaptersMobileApp
         public AppShell()
         {
             Routing.RegisterRoute("auth", typeof(AuthorizationPage));
+            Routing.RegisterRoute("register", typeof(RegistrationPage));
             InitializeComponent();
         }
     }

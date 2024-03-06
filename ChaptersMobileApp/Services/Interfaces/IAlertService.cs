@@ -8,7 +8,7 @@ namespace ChaptersMobileApp.Services.Interfaces
 {
     public interface IAlertService
     {
-        Task ShowSnackbar(string text);
+        Task ShowSnackbar(string text, Color color = default!);
         Task DisplayAlert(string text);
     }
 }

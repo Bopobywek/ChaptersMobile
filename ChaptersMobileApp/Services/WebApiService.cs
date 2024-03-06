@@ -1,4 +1,5 @@
 ﻿using ChaptersMobileApp.Services.Interfaces;
+using ChaptersMobileApp.Services.Results;
 using ChaptersMobileApp.Settings;
 using Microsoft.Extensions.Options;
 using System;
@@ -27,14 +28,24 @@ namespace ChaptersMobileApp.Services
         public async Task<bool> Authorize(string username, string password)
         {
             var request = new HttpRequestMessage(HttpMethod.Post, $"{_webApiSettings.Url}/api/test");
-            string credentials = $"{username}:{password}";
-            byte[] credentialsBytes = Encoding.UTF8.GetBytes(credentials);
-            string base64Credentials = Convert.ToBase64String(credentialsBytes);
-            request.Headers.Add("Authorization", $"Basic {base64Credentials}");
+            request.Headers.AddBasicAuthHeader(username, password);
 
             var response = await _httpClient.SendAsync(request);
             return response.IsSuccessStatusCode;
         }
+        public async Task<RegisterResult> Register(string username, string password)
+        {
+            var request = new HttpRequestMessage(HttpMethod.Post, $"{_webApiSettings.Url}/api/users");
+            var item = new { Username = username, Password = password };
+            string json = JsonSerializer.Serialize(item, _serializerOptions);
+            StringContent content = new StringContent(json, Encoding.UTF8, "application/json");
+            request.Content = content;
+
+            var response = await _httpClient.SendAsync(request);
+            return new RegisterResult(response.IsSuccessStatusCode, response.StatusCode, response.Content.ToString());
+        }
+
+
         public static HttpClientHandler GetInsecureHandler()
         {
             HttpClientHandler handler = new HttpClientHandler();

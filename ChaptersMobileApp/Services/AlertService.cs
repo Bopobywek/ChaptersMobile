@@ -12,19 +12,18 @@ namespace ChaptersMobileApp.Services
 {
     public class AlertService : IAlertService
     {
-        public async Task ShowSnackbar(string text)
+        public async Task ShowSnackbar(string text, Color color = default!)
         {
             CancellationTokenSource cancellationTokenSource = new CancellationTokenSource();
 
             var snackbarOptions = new SnackbarOptions
             {
-                BackgroundColor = Colors.Red,
-                TextColor = Colors.Green,
+                BackgroundColor = color ?? Colors.Red,
+                TextColor = Colors.Black,
                 ActionButtonTextColor = Colors.Yellow,
                 CornerRadius = new CornerRadius(10),
                 Font = Font.SystemFontOfSize(14),
-                ActionButtonFont = Font.SystemFontOfSize(14),
-                CharacterSpacing = 0.5
+                ActionButtonFont = Font.SystemFontOfSize(14)
             };
 
             TimeSpan duration = TimeSpan.FromSeconds(3);
