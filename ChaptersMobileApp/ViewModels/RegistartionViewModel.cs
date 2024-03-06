@@ -2,7 +2,6 @@
 using ChaptersMobileApp.Services.Results;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
-using Kotlin.Contracts;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;

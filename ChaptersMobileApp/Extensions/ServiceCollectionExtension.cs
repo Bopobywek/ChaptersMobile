@@ -20,6 +20,7 @@ namespace ChaptersMobileApp.Extensions
             services.AddTransient<ReadingListPage>();
             services.AddTransient<SubscriptionsPage>();
             services.AddTransient<ProfilePage>();
+            services.AddTransient<RatingPage>();
             return services;
         }
         public static IServiceCollection AddViewModels(this IServiceCollection services)
@@ -27,6 +28,7 @@ namespace ChaptersMobileApp.Extensions
             services.AddTransient<AuthorizationViewModel>();
             services.AddTransient<RegistrationViewModel>();
             services.AddTransient<ProfileViewModel>();
+            services.AddTransient<RatingViewModel>();
             services.AddTransient<IAlertService, AlertService>();
             services.AddTransient<IWebApiService, WebApiService>();
             return services;

@@ -16,7 +16,7 @@ namespace ChaptersMobileApp.ViewModels
         private bool authorized;
 
         public ICommand AuthorizeCommand { get; }
-        public ICommand UpdateCommand { get; }
+        public ICommand UpdateCommand { get; protected set; }
         public ICommand LogOutCommand { get; }
 
         public AuthorizedViewModel() { 
@@ -32,15 +32,16 @@ namespace ChaptersMobileApp.ViewModels
             await Shell.Current.GoToAsync("auth");
         }
 
-        private void Update()
+        protected virtual void Update()
         {
             var username = SecureStorage.Default.GetAsync("username").Result;
             Authorized = username is not null;
+           
         }
 
         private void LogOut()
         {
-            var username = SecureStorage.Default.GetAsync("username").Result;
+            SecureStorage.Default.RemoveAll();
             Authorized = false;
         }
 

@@ -14,10 +14,9 @@ public partial class ProfilePage : ContentPage
     }
 
 
-    protected override void OnNavigatingFrom(NavigatingFromEventArgs args)
+    protected override void OnNavigatedTo(NavigatedToEventArgs args)
     {
-        base.OnNavigatingFrom(args);
-
+        base.OnNavigatedTo(args);
         _profileViewModel.UpdateCommand.Execute(this);
     }
 }
