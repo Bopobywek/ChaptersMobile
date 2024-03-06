@@ -2,8 +2,29 @@
 <?xaml-comp compile="true" ?>
 <ResourceDictionary 
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml">
+    <toolkit:InvertedBoolConverter x:Key="InvertedBoolConverter" />
+    <ControlTemplate x:Key="pageTemplate">
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="*" />
+                <RowDefinition Height="Auto" />
+            </Grid.RowDefinitions>
+            <ContentPresenter Grid.Row="0" />
+            <BoxView HorizontalOptions="FillAndExpand" HeightRequest="1" Color="#A29E90" VerticalOptions="EndAndExpand" Grid.Row="1"/>
+        </Grid>
+    </ControlTemplate>
 
+    <Style TargetType="TabBar">
+        <Setter Property="Shell.TabBarBackgroundColor"
+            Value="#FAFDFF" />
+        <Setter Property="Shell.TabBarTitleColor"
+            Value="Black" />
+        <Setter Property="Shell.TabBarUnselectedColor"
+            Value="Black" />
+    </Style>
+    
     <Style TargetType="ActivityIndicator">
         <Setter Property="Color" Value="{AppThemeBinding Light={StaticResource Primary}, Dark={StaticResource White}}" />
     </Style>

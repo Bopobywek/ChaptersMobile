@@ -6,7 +6,7 @@
         {
             InitializeComponent();
 
-            MainPage = new NavigationPage(new RegistrationPage(new ViewModels.RegistrationViewModel(new HttpClient())));
+            MainPage = new AppShell();
         }
     }
 }

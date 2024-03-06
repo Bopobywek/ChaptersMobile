@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
+             x:Class="ChaptersMobileApp.Views.ProfilePage"
+             ControlTemplate="{StaticResource pageTemplate}">
+    <StackLayout>
+        <StackLayout  VerticalOptions="CenterAndExpand" HorizontalOptions="CenterAndExpand" IsVisible="{Binding Authorized, Converter={StaticResource InvertedBoolConverter}}" Spacing="10">
+            <Label Text="Вы должны войти или зарегистрироваться" TextColor="#a9a9a9" HorizontalOptions="Center" VerticalOptions="CenterAndExpand" />
+
+            <Button Text="Войти" Command="{Binding AuthorizeCommand}" BackgroundColor="#E8C547" TextColor="White" HorizontalOptions="Center" />
+        </StackLayout>
+
+        <StackLayout  VerticalOptions="CenterAndExpand" HorizontalOptions="CenterAndExpand" IsVisible="{Binding Authorized}" Spacing="10">
+            <Label Text="Вы должны выйти" TextColor="#a9a9a9" HorizontalOptions="Center" VerticalOptions="CenterAndExpand" />
+
+            <Button Text="Выйти" Command="{Binding LogOutCommand}" BackgroundColor="#E8C547" TextColor="White" HorizontalOptions="Center" />
+        </StackLayout>
+    </StackLayout>
+</ContentPage>

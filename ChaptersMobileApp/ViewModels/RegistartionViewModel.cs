@@ -1,4 +1,5 @@
-﻿using CommunityToolkit.Mvvm.Input;
+﻿using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.Input;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -10,20 +11,9 @@ using System.Windows.Input;
 
 namespace ChaptersMobileApp.ViewModels
 {
-    public class RegistrationViewModel : INotifyPropertyChanged
+    public partial class RegistrationViewModel : AuthorizedViewModel
     {
-        private string _username;
         private readonly HttpClient _httpClient;
-
-        public string Username
-        {
-            get => _username;
-            set
-            {
-                _username = value;
-                OnPropertyChanged(nameof(Username));
-            }
-        }
 
         // Add properties for other registration fields (e.g., Password, Email)
 
@@ -39,13 +29,6 @@ namespace ChaptersMobileApp.ViewModels
         {
             var request = new HttpRequestMessage(HttpMethod.Post, "localhost:8080/api/register");
             await _httpClient.SendAsync(request);
-        }
-
-        public event PropertyChangedEventHandler PropertyChanged;
-
-        protected virtual void OnPropertyChanged(string propertyName)
-        {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
     }
 }
