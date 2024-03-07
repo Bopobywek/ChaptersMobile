@@ -2,6 +2,7 @@
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
+             xmlns:controls="clr-namespace:XGENO.Maui.Controls;assembly=Maui.Controls.RatingView"
              x:Class="ChaptersMobileApp.Views.ProfilePage"
              ControlTemplate="{StaticResource pageTemplate}">
     <StackLayout Spacing="20">
@@ -34,7 +35,7 @@
 
             <BoxView HorizontalOptions="FillAndExpand" Grid.ColumnSpan="2" HeightRequest="1" Color="Black" VerticalOptions="EndAndExpand" Grid.Row="1"/>
         </Grid>
-        <ScrollView IsVisible="{Binding Authorized}">
+        <ScrollView IsVisible="{Binding Authorized}" VerticalOptions="FillAndExpand">
             <StackLayout Spacing="10">
         <Grid Margin="10,10,10,0">
             <Grid.RowDefinitions>
@@ -77,7 +78,10 @@
                     </Border>
                 </VerticalStackLayout>
             </Grid>
-            <Border StrokeThickness="1" Margin="10,10,10,0"/>
+
+                <!-- Читаю -->
+                <Border StrokeThickness="1" Margin="10,10,10,0"/>
+
                 <Grid Margin="10,0,10,0">
                     <Grid.RowDefinitions>
                         <RowDefinition Height="*" />
@@ -90,19 +94,249 @@
                         <ColumnDefinition Width="*" />
                     </Grid.ColumnDefinitions>
 
-                    <Label Text="Читаю" FontSize="Large" />
-                    <Label Text="Все (1)" HorizontalOptions="EndAndExpand" Grid.Column="2" TextColor="#F8A4A4" FontSize="Large" />
-                    <StackLayout Padding="10" Grid.RowSpan="2" Grid.Row="1" Orientation="Horizontal">
-                        <Image Source="https://raw.githubusercontent.com/dotnet/maui-samples/main/Images/campus.jpg" WidthRequest="50" HeightRequest="50" Margin="0,0,10,0" />
+                    <Label Text="Читаю" Grid.ColumnSpan="2" FontSize="Large" />
+                    <Label Text="{Binding Path=ReadingCount, StringFormat='Все ({0})'}" HorizontalOptions="EndAndExpand" Grid.Column="2" TextColor="#F8A4A4" FontSize="Large">
+                        <Label.GestureRecognizers>
+                            <TapGestureRecognizer Command="{Binding ViewBooksCommand}" />
+                        </Label.GestureRecognizers>
+                    </Label>
 
-                        <StackLayout>
-                            <Label Text="Test" FontSize="Medium" />
-                            <Label Text="Test2" FontSize="Small" />
-                            <Label Text="Test3" FontSize="Small" />
-                            <Label Text="Test4" FontSize="Small" />
-                        </StackLayout>
-                    </StackLayout>
-                    <Label Text="10/30" VerticalOptions="End" HorizontalOptions="End" Grid.Column="2" Grid.Row="2" />
+                    <CollectionView Grid.RowSpan="2" Grid.ColumnSpan="2" Grid.Row="1" ItemsSource="{Binding ReadingBooks}" SelectionMode="None">
+                        <CollectionView.ItemTemplate>
+                            <DataTemplate>
+                                <StackLayout Padding="10" Orientation="Horizontal" VerticalOptions="StartAndExpand">
+                                    <Image Source="{Binding Cover}" WidthRequest="90" HeightRequest="120" Margin="0,0,10,0">
+                                    </Image>
+                                    <Grid>
+                                        <Grid.RowDefinitions>
+                                            <RowDefinition Height="*" />
+                                            <RowDefinition Height="Auto" />
+                                            <RowDefinition Height="*" />
+                                            <RowDefinition Height="*" />
+                                        </Grid.RowDefinitions>
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="*" />
+                                            <ColumnDefinition Width="Auto" />
+                                            <ColumnDefinition Width="*" />
+                                        </Grid.ColumnDefinitions>
+                                        <Label Text="{Binding Title}"
+                                   LineBreakMode="WordWrap" FontSize="Large" />
+                                        <Label Grid.Row="1" Text="{Binding Author}"
+                                   LineBreakMode="WordWrap" FontSize="Medium" />
+                                        <controls:RatingView Grid.Row="3"
+                                            ItemCount="5"
+                                            ItemSize="16"
+                                            ItemSpacing="6"
+                                            Value="{Binding UserRating}"
+                                            RatedFillColor="Yellow"
+                                            UnRatedFillColor="LightGrey"
+                                            StrokeColor="Black"
+                                            StrokeWidth="1"
+                                            HorizontalOptions="Start" VerticalOptions="End" />
+                                    </Grid>
+                                    <StackLayout>
+
+                                    </StackLayout>
+                                </StackLayout>
+                        </DataTemplate>
+                        </CollectionView.ItemTemplate>
+                    </CollectionView>
+                    <VerticalStackLayout  Grid.Column="2" Grid.Row="2" VerticalOptions="End" HorizontalOptions="End" >
+                        <Label Text="10/30" HorizontalOptions="End"/>
+                        <ProgressBar Progress="0.5" />
+                    </VerticalStackLayout>
+                </Grid>
+
+                <!-- Буду читать -->
+                <Border StrokeThickness="1" Margin="10,10,10,0"/>
+
+                <Grid Margin="10,0,10,0">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="*" />
+                        <RowDefinition Height="*" />
+                        <RowDefinition Height="*" />
+                    </Grid.RowDefinitions>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="*" />
+                    </Grid.ColumnDefinitions>
+
+                    <Label Text="Буду читать" Grid.ColumnSpan="2" FontSize="Large" />
+                    <Label Text="{Binding Path=WillReadCount, StringFormat='Все ({0})'}" HorizontalOptions="EndAndExpand" Grid.Column="2" TextColor="#F8A4A4" FontSize="Large">
+                        <Label.GestureRecognizers>
+                            <TapGestureRecognizer Command="{Binding ViewBooksCommand}" />
+                        </Label.GestureRecognizers>
+                    </Label>
+
+                    <CollectionView Grid.RowSpan="2" Grid.ColumnSpan="2" Grid.Row="1" ItemsSource="{Binding WillReadBooks}" SelectionMode="None">
+                        <CollectionView.ItemTemplate>
+                            <DataTemplate>
+                                <StackLayout Padding="10" Orientation="Horizontal" VerticalOptions="StartAndExpand">
+                                    <Image Source="{Binding Cover}" WidthRequest="90" HeightRequest="120" Margin="0,0,10,0">
+                                    </Image>
+                                    <Grid>
+                                        <Grid.RowDefinitions>
+                                            <RowDefinition Height="*" />
+                                            <RowDefinition Height="Auto" />
+                                            <RowDefinition Height="*" />
+                                            <RowDefinition Height="*" />
+                                        </Grid.RowDefinitions>
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="*" />
+                                            <ColumnDefinition Width="Auto" />
+                                            <ColumnDefinition Width="*" />
+                                        </Grid.ColumnDefinitions>
+                                        <Label Text="{Binding Title}"
+                   LineBreakMode="WordWrap" FontSize="Large" />
+                                        <Label Grid.Row="1" Text="{Binding Author}"
+                   LineBreakMode="WordWrap" FontSize="Medium" />
+                                        <controls:RatingView Grid.Row="3"
+                            ItemCount="5"
+                            ItemSize="16"
+                            ItemSpacing="6"
+                            Value="{Binding UserRating}"
+                            RatedFillColor="Yellow"
+                            UnRatedFillColor="LightGrey"
+                            StrokeColor="Black"
+                            StrokeWidth="1"
+                            HorizontalOptions="Start" VerticalOptions="End" />
+                                    </Grid>
+                                    <StackLayout>
+
+                                    </StackLayout>
+                                </StackLayout>
+                            </DataTemplate>
+                        </CollectionView.ItemTemplate>
+                    </CollectionView>
+                </Grid>
+
+                <!-- Прочитал -->
+                <Border StrokeThickness="1" Margin="10,10,10,0"/>
+
+                <Grid Margin="10,0,10,0">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="*" />
+                        <RowDefinition Height="*" />
+                        <RowDefinition Height="*" />
+                    </Grid.RowDefinitions>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="*" />
+                    </Grid.ColumnDefinitions>
+
+                    <Label Text="Прочитал" Grid.ColumnSpan="2" FontSize="Large" />
+                    <Label Text="{Binding Path=ReadCount, StringFormat='Все ({0})'}" HorizontalOptions="EndAndExpand" Grid.Column="2" TextColor="#F8A4A4" FontSize="Large">
+                        <Label.GestureRecognizers>
+                            <TapGestureRecognizer Command="{Binding ViewBooksCommand}" />
+                        </Label.GestureRecognizers>
+                    </Label>
+
+                    <CollectionView Grid.RowSpan="2" Grid.ColumnSpan="2" Grid.Row="1" ItemsSource="{Binding ReadBooks}" SelectionMode="None">
+                        <CollectionView.ItemTemplate>
+                            <DataTemplate>
+                                <StackLayout Padding="10" Orientation="Horizontal" VerticalOptions="StartAndExpand">
+                                    <Image Source="{Binding Cover}" WidthRequest="90" HeightRequest="120" Margin="0,0,10,0">
+                                    </Image>
+                                    <Grid>
+                                        <Grid.RowDefinitions>
+                                            <RowDefinition Height="*" />
+                                            <RowDefinition Height="Auto" />
+                                            <RowDefinition Height="*" />
+                                            <RowDefinition Height="*" />
+                                        </Grid.RowDefinitions>
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="*" />
+                                            <ColumnDefinition Width="Auto" />
+                                            <ColumnDefinition Width="*" />
+                                        </Grid.ColumnDefinitions>
+                                        <Label Text="{Binding Title}"
+   LineBreakMode="WordWrap" FontSize="Large" />
+                                        <Label Grid.Row="1" Text="{Binding Author}"
+   LineBreakMode="WordWrap" FontSize="Medium" />
+                                        <controls:RatingView Grid.Row="3"
+            ItemCount="5"
+            ItemSize="16"
+            ItemSpacing="6"
+            Value="{Binding UserRating}"
+            RatedFillColor="Yellow"
+            UnRatedFillColor="LightGrey"
+            StrokeColor="Black"
+            StrokeWidth="1"
+            HorizontalOptions="Start" VerticalOptions="End" />
+                                    </Grid>
+                                    <StackLayout>
+
+                                    </StackLayout>
+                                </StackLayout>
+                            </DataTemplate>
+                        </CollectionView.ItemTemplate>
+                    </CollectionView>
+                </Grid>
+
+                <!-- Перестал читать -->
+                <Border StrokeThickness="1" Margin="10,10,10,0"/>
+
+                <Grid Margin="10,0,10,0">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="*" />
+                        <RowDefinition Height="*" />
+                        <RowDefinition Height="*" />
+                    </Grid.RowDefinitions>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="*" />
+                    </Grid.ColumnDefinitions>
+
+                    <Label Text="Перестал читать" Grid.ColumnSpan="2" FontSize="Large" />
+                    <Label Text="{Binding Path=StopReadingCount, StringFormat='Все ({0})'}" HorizontalOptions="EndAndExpand" Grid.Column="2" TextColor="#F8A4A4" FontSize="Large">
+                        <Label.GestureRecognizers>
+                            <TapGestureRecognizer Command="{Binding ViewBooksCommand}" />
+                        </Label.GestureRecognizers>
+                    </Label>
+
+                    <CollectionView Grid.RowSpan="2" Grid.ColumnSpan="2" Grid.Row="1" ItemsSource="{Binding StopReadingBooks}" SelectionMode="None">
+                        <CollectionView.ItemTemplate>
+                            <DataTemplate>
+                                <StackLayout Padding="10" Orientation="Horizontal" VerticalOptions="StartAndExpand">
+                                    <Image Source="{Binding Cover}" WidthRequest="90" HeightRequest="120" Margin="0,0,10,0">
+                                    </Image>
+                                    <Grid>
+                                        <Grid.RowDefinitions>
+                                            <RowDefinition Height="*" />
+                                            <RowDefinition Height="Auto" />
+                                            <RowDefinition Height="*" />
+                                            <RowDefinition Height="*" />
+                                        </Grid.RowDefinitions>
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="*" />
+                                            <ColumnDefinition Width="Auto" />
+                                            <ColumnDefinition Width="*" />
+                                        </Grid.ColumnDefinitions>
+                                        <Label Text="{Binding Title}"
+LineBreakMode="WordWrap" FontSize="Large" />
+                                        <Label Grid.Row="1" Text="{Binding Author}"
+LineBreakMode="WordWrap" FontSize="Medium" />
+                                        <controls:RatingView Grid.Row="3"
+         ItemCount="5"
+         ItemSize="16"
+         ItemSpacing="6"
+         Value="{Binding UserRating}"
+         RatedFillColor="Yellow"
+         UnRatedFillColor="LightGrey"
+         StrokeColor="Black"
+         StrokeWidth="1"
+         HorizontalOptions="Start" VerticalOptions="End" />
+                                    </Grid>
+                                    <StackLayout>
+
+                                    </StackLayout>
+                                </StackLayout>
+                            </DataTemplate>
+                        </CollectionView.ItemTemplate>
+                    </CollectionView>
                 </Grid>
             </StackLayout>
         </ScrollView>

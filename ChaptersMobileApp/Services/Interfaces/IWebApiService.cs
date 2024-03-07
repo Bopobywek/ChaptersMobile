@@ -1,4 +1,5 @@
-﻿using ChaptersMobileApp.Services.Results;
+﻿using ChaptersMobileApp.Models;
+using ChaptersMobileApp.Services.Results;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,5 +12,6 @@ namespace ChaptersMobileApp.Services.Interfaces
     {
         Task<bool> Authorize(string username, string password);
         Task<RegisterResult> Register(string username, string password);
+        Task<List<GetBooksResult>> GetBooks(BookStatus? bookStatus = null);
     }
 }

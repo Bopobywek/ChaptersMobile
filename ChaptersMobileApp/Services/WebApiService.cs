@@ -1,4 +1,5 @@
-﻿using ChaptersMobileApp.Services.Interfaces;
+﻿using ChaptersMobileApp.Models;
+using ChaptersMobileApp.Services.Interfaces;
 using ChaptersMobileApp.Services.Results;
 using ChaptersMobileApp.Settings;
 using Microsoft.Extensions.Options;
@@ -8,6 +9,7 @@ using System.Linq;
 using System.Text;
 using System.Text.Json;
 using System.Threading.Tasks;
+using System.Web;
 
 namespace ChaptersMobileApp.Services
 {
@@ -21,7 +23,7 @@ namespace ChaptersMobileApp.Services
             _webApiSettings = options.Value;
             _serializerOptions = new JsonSerializerOptions
             {
-                PropertyNamingPolicy = JsonNamingPolicy.SnakeCaseUpper,
+                PropertyNamingPolicy = JsonNamingPolicy.SnakeCaseLower,
                 WriteIndented = true
             };
         }
@@ -43,6 +45,38 @@ namespace ChaptersMobileApp.Services
 
             var response = await _httpClient.SendAsync(request);
             return new RegisterResult(response.IsSuccessStatusCode, response.StatusCode, response.Content.ToString());
+        }
+        public async Task<List<GetBooksResult>> GetBooks(BookStatus? bookStatus = null)
+        {
+            HttpRequestMessage request;
+            if (bookStatus is not null)
+            {
+                var query = HttpUtility.ParseQueryString(string.Empty);
+                query["bookStatus"] = bookStatus.ToString();
+                string queryString = query.ToString();
+                request = new HttpRequestMessage(HttpMethod.Get, $"{_webApiSettings.Url}/api/books?{queryString}");
+            }
+            else
+            {
+                request = new HttpRequestMessage(HttpMethod.Get, $"{_webApiSettings.Url}/api/books");
+            }
+
+            var username = await SecureStorage.Default.GetAsync("username");
+            var password = await SecureStorage.Default.GetAsync("password");
+            
+            if (username is not null)
+            {
+                request.Headers.AddBasicAuthHeader(username, password);
+            }
+
+            var response = await _httpClient.SendAsync(request);
+            if (!response.IsSuccessStatusCode)
+            {
+                return new List<GetBooksResult>();
+            }
+
+            var str = await response.Content.ReadAsStringAsync();
+            return JsonSerializer.Deserialize<List<GetBooksResult>>(str, _serializerOptions);
         }
 
 

@@ -2,6 +2,7 @@
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="ChaptersMobileApp.Views.RatingPage"
+             xmlns:controls="clr-namespace:XGENO.Maui.Controls;assembly=Maui.Controls.RatingView"
              Shell.NavBarIsVisible="False">
 
     <StackLayout Padding="20">
@@ -14,13 +15,36 @@
             <CollectionView.ItemTemplate>
                 <DataTemplate>
                     <StackLayout Padding="10" Orientation="Horizontal" VerticalOptions="StartAndExpand">
-                        <Image Source="https://raw.githubusercontent.com/Bopobywek/bopo_trunk/main/illuzion.jpg" WidthRequest="90" HeightRequest="120" Margin="0,0,10,0">
+                        <Image Source="{Binding Cover}" WidthRequest="90" HeightRequest="120" Margin="0,0,10,0">
                         </Image>
+                        <Grid>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="*" />
+                                <RowDefinition Height="*" />
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="*" />
+                            </Grid.RowDefinitions>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="Auto" />
+                                <ColumnDefinition Width="*" />
+                            </Grid.ColumnDefinitions>
+                            <Label Text="{Binding Title}" FontSize="Large" />
+                            <Label Grid.Row="1" Text="{Binding Author}" FontSize="Medium" />
+                            <controls:RatingView Grid.Row="3"
+                                        ItemCount="5"
+                                        ItemSize="16"
+                                        ItemSpacing="6"
+                                        Value="{Binding Rating}"
+                                        RatedFillColor="Yellow"
+                                        UnRatedFillColor="LightGrey"
+                                        StrokeColor="Black"
+                                        StrokeWidth="1"
+                                        HorizontalOptions="Start" VerticalOptions="End" />
+                            <Label Grid.Column="2" Text="{Binding Position}" HorizontalOptions="EndAndExpand" FontSize="Large" />
+                        </Grid>
                         <StackLayout>
-                            <Label Text="{Binding Name}" FontSize="Large" />
-                            <Label Text="{Binding Author}" FontSize="Medium" />
-                            <Label Text="{Binding Rating}" FontSize="Medium" />
-                            <Label Text="{Binding Position}" FontSize="Medium" />
+                            
                         </StackLayout>
                     </StackLayout>
                 </DataTemplate>
