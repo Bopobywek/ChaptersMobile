@@ -5,16 +5,25 @@
              ControlTemplate="{StaticResource pageTemplate}"
              xmlns:models="clr-namespace:ChaptersMobileApp.Models"
              Shell.NavBarIsVisible="False">
-    <Grid Margin="20,0,20,0">
-        <StackLayout Spacing="20" VerticalOptions="CenterAndExpand" HorizontalOptions="CenterAndExpand">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="10*"/>
+            <RowDefinition Height="90*"/>
+        </Grid.RowDefinitions>
+        <StackLayout Grid.RowSpan="2" Spacing="20" VerticalOptions="CenterAndExpand" HorizontalOptions="CenterAndExpand">
             <StackLayout VerticalOptions="CenterAndExpand" HorizontalOptions="CenterAndExpand" IsVisible="{Binding Authorized, Converter={StaticResource InvertedBoolConverter}}" Spacing="10">
                 <Label Text="Вы должны войти или зарегистрироваться" TextColor="#a9a9a9" HorizontalOptions="Center" VerticalOptions="CenterAndExpand" />
 
                 <Button Text="Войти" Command="{Binding AuthorizeCommand}" BackgroundColor="#E8C547" TextColor="White" HorizontalOptions="Center" />
             </StackLayout>
         </StackLayout>
-
-        <CollectionView ItemsSource="{Binding Books}" IsVisible="{Binding Authorized}">
+        
+        <VerticalStackLayout IsVisible="{Binding Authorized}" VerticalOptions="EndAndExpand" Spacing="10">
+            <Label Margin="20,0,20,0" FontSize="30" Text="Читаю сейчас" VerticalOptions="EndAndExpand" />
+            <Border StrokeThickness="1" />
+        </VerticalStackLayout>
+        
+        <CollectionView Grid.Row="1" Margin="20,0,20,0" ItemsSource="{Binding Books}" IsVisible="{Binding Authorized}">
             <CollectionView.ItemTemplate>
                 <DataTemplate>
                     <StackLayout Margin="0,20,0,0">

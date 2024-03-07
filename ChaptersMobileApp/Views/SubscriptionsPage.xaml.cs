@@ -23,4 +23,31 @@ public partial class SubscriptionsPage : ContentPage
     {
         _viewModel.UpdateCommand.Execute(this);
     }
+
+    private void Button_Clicked(object sender, EventArgs e)
+    {
+
+    }
+
+    private void ButtonSub_Clicked(object sender, EventArgs e)
+    {
+        if (ButtonSub.BackgroundColor != Colors.Gray)
+        {
+            return;
+        }
+        ButtonSub.BackgroundColor = ButtonNew.BackgroundColor;
+        ButtonNew.BackgroundColor = Colors.Gray;
+        SubscriptionsSections.IsVisible = true;
+    }
+
+    private void ButtonNew_Clicked(object sender, EventArgs e)
+    {
+        if (ButtonNew.BackgroundColor != Colors.Gray)
+        {
+            return;
+        }
+        ButtonNew.BackgroundColor = ButtonSub.BackgroundColor;
+        ButtonSub.BackgroundColor = Colors.Gray;
+        SubscriptionsSections.IsVisible = false;
+    }
 }
