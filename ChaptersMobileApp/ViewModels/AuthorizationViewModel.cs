@@ -1,4 +1,5 @@
-﻿using ChaptersMobileApp.Services.Interfaces;
+﻿using ChaptersMobileApp.Services;
+using ChaptersMobileApp.Services.Interfaces;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using System;
@@ -24,16 +25,18 @@ namespace ChaptersMobileApp.ViewModels
 
         private readonly IAlertService _alertService;
         private readonly IWebApiService _apiService;
+        private readonly AuthorizationService _authorizationService;
 
         public IRelayCommand AuthorizeCommand {  get; }
         public IRelayCommand RegisterCommand { get; }
         public IRelayCommand ReturnCommand { get; }
-        public AuthorizationViewModel(IAlertService alertService, IWebApiService apiService) {
+        public AuthorizationViewModel(IAlertService alertService, IWebApiService apiService, AuthorizationService authorizationService) {
             AuthorizeCommand = new AsyncRelayCommand(Authorize);
             RegisterCommand = new AsyncRelayCommand(Register);
             ReturnCommand = new AsyncRelayCommand(Return);
             _alertService = alertService;
             _apiService = apiService;
+            _authorizationService = authorizationService;
         }
 
         private async Task Authorize() { 
@@ -57,8 +60,7 @@ namespace ChaptersMobileApp.ViewModels
 
             if (result)
             {
-                await SecureStorage.SetAsync("username", _username);
-                await SecureStorage.SetAsync("password", _password);
+                await _authorizationService.Authorize(_username, _password);
                 await Shell.Current.GoToAsync("..", true);
             } else
             {

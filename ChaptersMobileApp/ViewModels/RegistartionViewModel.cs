@@ -1,4 +1,5 @@
-﻿using ChaptersMobileApp.Services.Interfaces;
+﻿using ChaptersMobileApp.Services;
+using ChaptersMobileApp.Services.Interfaces;
 using ChaptersMobileApp.Services.Results;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
@@ -28,18 +29,20 @@ namespace ChaptersMobileApp.ViewModels
 
         private readonly IWebApiService _apiService;
         private readonly IAlertService _alertService;
+        private readonly AuthorizationService _authorizationService;
 
         // Add properties for other registration fields (e.g., Password, Email)
 
         public ICommand RegisterCommand { get; }
         public IRelayCommand ReturnCommand { get; }
 
-        public RegistrationViewModel(IWebApiService apiService, IAlertService alertService)
+        public RegistrationViewModel(IWebApiService apiService, IAlertService alertService, AuthorizationService authorizationService)
         {
             RegisterCommand = new AsyncRelayCommand(Register);
             ReturnCommand = new AsyncRelayCommand(Return);
             _apiService = apiService;
             _alertService = alertService;
+            _authorizationService = authorizationService;
         }
 
         private async Task Register()
@@ -66,8 +69,7 @@ namespace ChaptersMobileApp.ViewModels
             if (result.IsSuccessStatusCode)
             {
                 await _alertService.ShowSnackbar("Вы успешно зарегистрировались", Colors.Green);
-                await SecureStorage.SetAsync("username", _username);
-                await SecureStorage.SetAsync("password", _password);
+                await _authorizationService.Authorize(Username, Password);
                 await Shell.Current.GoToAsync("../../", true);
             }
             else

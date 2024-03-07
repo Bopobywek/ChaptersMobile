@@ -17,8 +17,8 @@ namespace ChaptersMobileApp.Extensions
             services.AddTransient<AuthorizationPage>();
             services.AddTransient<RegistrationPage>();
             services.AddTransient<RatingPage>();
-            services.AddTransient<ReadingListPage>();
-            services.AddTransient<SubscriptionsPage>();
+            services.AddSingleton<ReadingListPage>();
+            services.AddSingleton<SubscriptionsPage>();
             services.AddTransient<ProfilePage>();
             services.AddTransient<RatingPage>();
             return services;
@@ -29,6 +29,9 @@ namespace ChaptersMobileApp.Extensions
             services.AddTransient<RegistrationViewModel>();
             services.AddTransient<ProfileViewModel>();
             services.AddTransient<RatingViewModel>();
+            services.AddSingleton<ReadingListViewModel>();
+            services.AddSingleton<SubscriptionsViewModel>();
+            services.AddSingleton<AuthorizationService>();
             services.AddTransient<IAlertService, AlertService>();
             services.AddTransient<IWebApiService, WebApiService>();
             return services;

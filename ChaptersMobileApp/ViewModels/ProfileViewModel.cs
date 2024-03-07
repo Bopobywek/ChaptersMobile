@@ -1,4 +1,5 @@
-﻿using CommunityToolkit.Mvvm.ComponentModel;
+﻿using ChaptersMobileApp.Services;
+using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using System;
 using System.Collections.Generic;
@@ -14,7 +15,7 @@ namespace ChaptersMobileApp.ViewModels
         private string _username;
 
 
-        public ProfileViewModel()
+        public ProfileViewModel(AuthorizationService authorizationService) : base(authorizationService)
         { 
             UpdateCommand = new RelayCommand(Update);
         }

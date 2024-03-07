@@ -5,10 +5,10 @@
        xmlns:mainViews="clr-namespace:ChaptersMobileApp"
        x:Class="ChaptersMobileApp.AppShell"
        BackgroundColor="#FFFEFA">
-    
+
     <TabBar>
         <Tab Title="Читаемое">
-            <ShellContent ContentTemplate="{DataTemplate views:ReadingListPage}" />
+            <ShellContent ContentTemplate="{DataTemplate views:ReadingListPage}"/>
         </Tab>
         <Tab Title="Подписки">
             <ShellContent ContentTemplate="{DataTemplate views:SubscriptionsPage}" />

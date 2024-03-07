@@ -1,4 +1,5 @@
-﻿using CommunityToolkit.Mvvm.ComponentModel;
+﻿using ChaptersMobileApp.Services;
+using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using System;
 using System.Collections.Generic;
@@ -14,17 +15,19 @@ namespace ChaptersMobileApp.ViewModels
     {
         [ObservableProperty]
         private bool authorized;
+        private readonly AuthorizationService _authorizationNotifierService;
 
         public ICommand AuthorizeCommand { get; }
         public ICommand UpdateCommand { get; protected set; }
         public ICommand LogOutCommand { get; }
 
-        public AuthorizedViewModel() { 
+        public AuthorizedViewModel(AuthorizationService authorizationNotifierService) { 
             var username = SecureStorage.Default.GetAsync("username").Result;
             Authorized = username is not null;
             AuthorizeCommand = new AsyncRelayCommand(Authorize);
             UpdateCommand = new RelayCommand(Update);
             LogOutCommand = new RelayCommand(LogOut);
+            _authorizationNotifierService = authorizationNotifierService;
         }
 
         private async Task Authorize()
@@ -41,7 +44,7 @@ namespace ChaptersMobileApp.ViewModels
 
         private void LogOut()
         {
-            SecureStorage.Default.RemoveAll();
+            _authorizationNotifierService.LogOut();
             Authorized = false;
         }
 
