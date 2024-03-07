@@ -21,6 +21,8 @@ namespace ChaptersMobileApp.Extensions
             services.AddSingleton<SubscriptionsPage>();
             services.AddTransient<ProfilePage>();
             services.AddTransient<RatingPage>();
+            services.AddTransient<BookPage>();
+            services.AddTransient<ViewBooksPage>();
             return services;
         }
         public static IServiceCollection AddViewModels(this IServiceCollection services)
@@ -31,6 +33,8 @@ namespace ChaptersMobileApp.Extensions
             services.AddTransient<RatingViewModel>();
             services.AddSingleton<ReadingListViewModel>();
             services.AddSingleton<SubscriptionsViewModel>();
+            services.AddTransient<ViewBooksViewModel>();
+            services.AddTransient<BookViewModel>();
             services.AddSingleton<AuthorizationService>();
             services.AddTransient<IAlertService, AlertService>();
             services.AddTransient<IWebApiService, WebApiService>();

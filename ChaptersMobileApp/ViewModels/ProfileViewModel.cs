@@ -23,28 +23,33 @@ namespace ChaptersMobileApp.ViewModels
         [ObservableProperty]
         private int _readingCount;
         public ObservableCollection<Book> ReadingBooks { get; } = new();
+        public List<Book> ReadingBooksFull { get; } = new();
 
         [ObservableProperty]
         private int _willReadCount;
         public ObservableCollection<Book> WillReadBooks { get; } = new();
+        public List<Book> WillReadBooksFull { get; } = new();
 
         [ObservableProperty]
         private int _readCount;
         public ObservableCollection<Book> ReadBooks { get; } = new();
+        public List<Book> ReadBooksFull { get; } = new();
 
         [ObservableProperty]
         private int _stopReadingCount;
         public ObservableCollection<Book> StopReadingBooks { get; } = new();
+        public List<Book> StopReadingBooksFull { get; } = new();
 
         private readonly IWebApiService _webApiService;
+        private readonly IAlertService _alertService;
 
-        public ICommand ViewBooksCommand { get; }
-
-        public ProfileViewModel(AuthorizationService authorizationService, IWebApiService webApiService) : base(authorizationService)
+        public ProfileViewModel(AuthorizationService authorizationService,
+            IWebApiService webApiService,
+            IAlertService alertService) : base(authorizationService)
         { 
             UpdateCommand = new RelayCommand(Update);
-            ViewBooksCommand = new AsyncRelayCommand(ViewBooks);
             _webApiService = webApiService;
+            _alertService = alertService;
         }
 
         protected override void Update()
@@ -57,47 +62,69 @@ namespace ChaptersMobileApp.ViewModels
             Task.Run(async () => await UpdateBooks());
         }
 
-        private async Task ViewBooks()
-        { 
+        [RelayCommand]
+        private async Task ViewBooks(string type)
+        {
+            var navigationParameter = new Dictionary<string, object>
+            {
+            };
+            var paramName = "BookList";
+            switch (type)
+            {
+                case "Read":
+                    navigationParameter.Add(paramName, ReadBooksFull);
+                    break;
+                case "StopReading":
+                    navigationParameter.Add(paramName, StopReadingBooksFull);
+                    break;
+                case "WillRead":
+                    navigationParameter.Add(paramName, WillReadBooksFull);
+                    break;
+                case "Reading":
+                    navigationParameter.Add(paramName, ReadingBooksFull);
+                    break;
+            }
+            if (((List<Book>)navigationParameter[paramName]).Count == 0)
+            {
+                await _alertService.ShowSnackbar("Список пуст", Colors.OrangeRed);
+                return;
+            }
+
+            await Shell.Current.GoToAsync("viewBooks", navigationParameter);
         }
 
         private async Task UpdateBooks()
         {
             var books = await _webApiService.GetBooks(BookStatus.Reading);
             var entites = MapEntities(books);
-            ReadingBooks.Clear();
-            foreach (var entity in entites)
-            {
-                ReadingBooks.Add(entity);
-            }
-            ReadingCount = entites.Count;
+            ReadingCount = FillList(ReadingBooks, ReadingBooksFull, entites);
 
             books = await _webApiService.GetBooks(BookStatus.WillRead);
             entites = MapEntities(books);
-            WillReadBooks.Clear();
-            foreach (var entity in entites)
-            {
-                WillReadBooks.Add(entity);
-            }
-            WillReadCount = entites.Count;
+            WillReadCount = FillList(WillReadBooks, WillReadBooksFull, entites);
 
             books = await _webApiService.GetBooks(BookStatus.Finished);
             entites = MapEntities(books);
-            ReadBooks.Clear();
-            foreach (var entity in entites)
-            {
-                ReadBooks.Add(entity);
-            }
-            ReadCount = entites.Count;
+            ReadCount = FillList(ReadBooks, ReadBooksFull, entites);
 
             books = await _webApiService.GetBooks(BookStatus.StopReading);
             entites = MapEntities(books);
-            StopReadingBooks.Clear();
-            foreach (var entity in entites)
+            StopReadingCount = FillList(StopReadingBooks, StopReadingBooksFull, entites);
+        }
+
+        private int FillList(ObservableCollection<Book> preview, List<Book> fullList, IEnumerable<Book> entities)
+        {
+            preview.Clear();
+            fullList.Clear();
+            foreach (var entity in entities)
             {
-                StopReadingBooks.Add(entity);
+                if (preview.Count == 0)
+                {
+                    preview.Add(entity);
+                }
+                fullList.Add(entity);
             }
-            StopReadingCount = entites.Count;
+            return entities.Count();
         }
 
         private List<Book> MapEntities(IEnumerable<GetBooksResult> result)

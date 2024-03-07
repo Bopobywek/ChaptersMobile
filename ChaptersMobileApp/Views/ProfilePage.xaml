@@ -97,7 +97,7 @@
                     <Label Text="Читаю" Grid.ColumnSpan="2" FontSize="Large" />
                     <Label Text="{Binding Path=ReadingCount, StringFormat='Все ({0})'}" HorizontalOptions="EndAndExpand" Grid.Column="2" TextColor="#F8A4A4" FontSize="Large">
                         <Label.GestureRecognizers>
-                            <TapGestureRecognizer Command="{Binding ViewBooksCommand}" />
+                            <TapGestureRecognizer Command="{Binding ViewBooksCommand}" CommandParameter="Reading" />
                         </Label.GestureRecognizers>
                     </Label>
 
@@ -165,7 +165,7 @@
                     <Label Text="Буду читать" Grid.ColumnSpan="2" FontSize="Large" />
                     <Label Text="{Binding Path=WillReadCount, StringFormat='Все ({0})'}" HorizontalOptions="EndAndExpand" Grid.Column="2" TextColor="#F8A4A4" FontSize="Large">
                         <Label.GestureRecognizers>
-                            <TapGestureRecognizer Command="{Binding ViewBooksCommand}" />
+                            <TapGestureRecognizer Command="{Binding ViewBooksCommand}" CommandParameter="WillRead"/>
                         </Label.GestureRecognizers>
                     </Label>
 
@@ -229,7 +229,7 @@
                     <Label Text="Прочитал" Grid.ColumnSpan="2" FontSize="Large" />
                     <Label Text="{Binding Path=ReadCount, StringFormat='Все ({0})'}" HorizontalOptions="EndAndExpand" Grid.Column="2" TextColor="#F8A4A4" FontSize="Large">
                         <Label.GestureRecognizers>
-                            <TapGestureRecognizer Command="{Binding ViewBooksCommand}" />
+                            <TapGestureRecognizer Command="{Binding ViewBooksCommand}" CommandParameter="Read"/>
                         </Label.GestureRecognizers>
                     </Label>
 
@@ -293,7 +293,7 @@
                     <Label Text="Перестал читать" Grid.ColumnSpan="2" FontSize="Large" />
                     <Label Text="{Binding Path=StopReadingCount, StringFormat='Все ({0})'}" HorizontalOptions="EndAndExpand" Grid.Column="2" TextColor="#F8A4A4" FontSize="Large">
                         <Label.GestureRecognizers>
-                            <TapGestureRecognizer Command="{Binding ViewBooksCommand}" />
+                            <TapGestureRecognizer Command="{Binding ViewBooksCommand}" CommandParameter="StopReading"/>
                         </Label.GestureRecognizers>
                     </Label>
 
