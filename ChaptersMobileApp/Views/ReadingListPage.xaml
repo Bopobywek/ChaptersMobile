@@ -3,12 +3,56 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="ChaptersMobileApp.Views.ReadingListPage"
              ControlTemplate="{StaticResource pageTemplate}"
+             xmlns:models="clr-namespace:ChaptersMobileApp.Models"
              Shell.NavBarIsVisible="False">
-    <StackLayout Spacing="20">
-        <StackLayout  VerticalOptions="CenterAndExpand" HorizontalOptions="CenterAndExpand" IsVisible="{Binding Authorized, Converter={StaticResource InvertedBoolConverter}}" Spacing="10">
-            <Label Text="Вы должны войти или зарегистрироваться" TextColor="#a9a9a9" HorizontalOptions="Center" VerticalOptions="CenterAndExpand" />
+    <StackLayout>
+        <StackLayout Spacing="20">
+            <StackLayout  VerticalOptions="CenterAndExpand" HorizontalOptions="CenterAndExpand" IsVisible="{Binding Authorized, Converter={StaticResource InvertedBoolConverter}}" Spacing="10">
+                <Label Text="Вы должны войти или зарегистрироваться" TextColor="#a9a9a9" HorizontalOptions="Center" VerticalOptions="CenterAndExpand" />
 
-            <Button Text="Войти" Command="{Binding AuthorizeCommand}" BackgroundColor="#E8C547" TextColor="White" HorizontalOptions="Center" />
+                <Button Text="Войти" Command="{Binding AuthorizeCommand}" BackgroundColor="#E8C547" TextColor="White" HorizontalOptions="Center" />
+            </StackLayout>
         </StackLayout>
+
+        <ScrollView IsVisible="{Binding Authorized}">
+            <CollectionView ItemsSource="{Binding Books}">
+                <CollectionView.ItemTemplate>
+                    <DataTemplate>
+                        <StackLayout Padding="10" Orientation="Horizontal" VerticalOptions="StartAndExpand">
+                            <Image Source="{Binding Cover}" WidthRequest="90" HeightRequest="120" Margin="0,0,10,0">
+                            </Image>
+                            <Grid>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="*" />
+                                    <RowDefinition Height="Auto" />
+                                    <RowDefinition Height="*" />
+                                    <RowDefinition Height="*" />
+                                </Grid.RowDefinitions>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*" />
+                                    <ColumnDefinition Width="Auto" />
+                                    <ColumnDefinition Width="*" />
+                                </Grid.ColumnDefinitions>
+                                <Label Text="{Binding Title}"
+LineBreakMode="WordWrap" FontSize="Large" />
+                                <Label Grid.Row="1" Text="{Binding Author}"
+LineBreakMode="WordWrap" FontSize="Medium" />
+                                <StackLayout Grid.Row="3" Grid.ColumnSpan="3" BindableLayout.ItemsSource="{Binding Chapters}">
+                                    <BindableLayout.ItemTemplate>
+                                        <DataTemplate>
+                                            <HorizontalStackLayout>
+                                                <Label Text="{Binding Title}" />
+                                            </HorizontalStackLayout>
+                                        </DataTemplate>
+                                    </BindableLayout.ItemTemplate>
+                                </StackLayout>
+                            </Grid>
+                            <StackLayout>
+                            </StackLayout>
+                        </StackLayout>
+                    </DataTemplate>
+                </CollectionView.ItemTemplate>
+            </CollectionView>
+        </ScrollView>
     </StackLayout>
 </ContentPage>
