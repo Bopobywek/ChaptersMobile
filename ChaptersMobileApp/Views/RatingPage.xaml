@@ -3,15 +3,20 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="ChaptersMobileApp.Views.RatingPage"
              xmlns:controls="clr-namespace:XGENO.Maui.Controls;assembly=Maui.Controls.RatingView"
+             ControlTemplate="{StaticResource pageTemplate}"
              Shell.NavBarIsVisible="False">
 
-    <StackLayout Padding="20">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="20*" />
+            <RowDefinition Height="80*" />
+        </Grid.RowDefinitions>
         <StackLayout VerticalOptions="Start" HorizontalOptions="CenterAndExpand" Margin="0,20,0,0">
             <Label Text="Рейтинг книг" FontSize="Large" HorizontalOptions="Center" />
-            <SearchBar Placeholder="Поиск..." />
+            <SearchBar Placeholder="Поиск..." Margin="0,0,20,0" />
         </StackLayout>
 
-        <CollectionView ItemsSource="{Binding BookList}" SelectionMode="None">
+        <CollectionView Margin="20,0,20,0" Grid.Row="1" ItemsSource="{Binding BookList}" SelectionMode="None">
             <CollectionView.ItemTemplate>
                 <DataTemplate>
                     <StackLayout Padding="10" Orientation="Horizontal" VerticalOptions="StartAndExpand">
@@ -51,6 +56,6 @@
             </CollectionView.ItemTemplate>
         </CollectionView>
 
-    </StackLayout>
+    </Grid>
 
 </ContentPage>

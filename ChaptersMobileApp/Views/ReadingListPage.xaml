@@ -5,21 +5,21 @@
              ControlTemplate="{StaticResource pageTemplate}"
              xmlns:models="clr-namespace:ChaptersMobileApp.Models"
              Shell.NavBarIsVisible="False">
-    <StackLayout>
-        <StackLayout Spacing="20">
-            <StackLayout  VerticalOptions="CenterAndExpand" HorizontalOptions="CenterAndExpand" IsVisible="{Binding Authorized, Converter={StaticResource InvertedBoolConverter}}" Spacing="10">
+    <Grid Margin="20,0,20,0">
+        <StackLayout Spacing="20" VerticalOptions="CenterAndExpand" HorizontalOptions="CenterAndExpand">
+            <StackLayout VerticalOptions="CenterAndExpand" HorizontalOptions="CenterAndExpand" IsVisible="{Binding Authorized, Converter={StaticResource InvertedBoolConverter}}" Spacing="10">
                 <Label Text="Вы должны войти или зарегистрироваться" TextColor="#a9a9a9" HorizontalOptions="Center" VerticalOptions="CenterAndExpand" />
 
                 <Button Text="Войти" Command="{Binding AuthorizeCommand}" BackgroundColor="#E8C547" TextColor="White" HorizontalOptions="Center" />
             </StackLayout>
         </StackLayout>
 
-        <ScrollView IsVisible="{Binding Authorized}">
-            <CollectionView ItemsSource="{Binding Books}">
-                <CollectionView.ItemTemplate>
-                    <DataTemplate>
+        <CollectionView ItemsSource="{Binding Books}" IsVisible="{Binding Authorized}">
+            <CollectionView.ItemTemplate>
+                <DataTemplate>
+                    <StackLayout Margin="0,20,0,0">
                         <StackLayout Padding="10" Orientation="Horizontal" VerticalOptions="StartAndExpand">
-                            <Image Source="{Binding Cover}" WidthRequest="90" HeightRequest="120" Margin="0,0,10,0">
+                            <Image Source="https://raw.githubusercontent.com/Bopobywek/bopo_trunk/main/trianon.jpg" WidthRequest="90" HeightRequest="120" Margin="0,0,10,0">
                             </Image>
                             <Grid>
                                 <Grid.RowDefinitions>
@@ -34,25 +34,34 @@
                                     <ColumnDefinition Width="*" />
                                 </Grid.ColumnDefinitions>
                                 <Label Text="{Binding Title}"
-LineBreakMode="WordWrap" FontSize="Large" />
+                                    LineBreakMode="WordWrap" FontSize="Large" />
                                 <Label Grid.Row="1" Text="{Binding Author}"
-LineBreakMode="WordWrap" FontSize="Medium" />
-                                <StackLayout Grid.Row="3" Grid.ColumnSpan="3" BindableLayout.ItemsSource="{Binding Chapters}">
-                                    <BindableLayout.ItemTemplate>
-                                        <DataTemplate>
-                                            <HorizontalStackLayout>
-                                                <Label Text="{Binding Title}" />
-                                            </HorizontalStackLayout>
-                                        </DataTemplate>
-                                    </BindableLayout.ItemTemplate>
-                                </StackLayout>
+                                    LineBreakMode="WordWrap" FontSize="Medium" />
+
                             </Grid>
                             <StackLayout>
                             </StackLayout>
                         </StackLayout>
-                    </DataTemplate>
-                </CollectionView.ItemTemplate>
-            </CollectionView>
-        </ScrollView>
-    </StackLayout>
+                        <StackLayout BindableLayout.ItemsSource="{Binding Chapters}" Spacing="2">
+                            <BindableLayout.ItemTemplate>
+                                <DataTemplate>
+                                    <Border StrokeThickness="2" Padding="3">
+                                        <Grid>
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="95*"/>
+                                                <ColumnDefinition Width="Auto"/>
+                                            </Grid.ColumnDefinitions>
+                                            <Label FontSize="Medium" VerticalOptions="Center" Text="{Binding Title}" />
+                                            <CheckBox Grid.Column="1" VerticalOptions="Start"/>
+                                        </Grid>
+                                    </Border>
+                                </DataTemplate>
+                            </BindableLayout.ItemTemplate>
+                        </StackLayout>
+                        <Border StrokeThickness="1" Margin="0,10,0,0" />
+                    </StackLayout>
+                </DataTemplate>
+            </CollectionView.ItemTemplate>
+        </CollectionView>
+    </Grid>
 </ContentPage>

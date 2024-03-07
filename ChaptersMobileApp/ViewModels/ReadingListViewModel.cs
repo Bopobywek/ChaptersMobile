@@ -14,10 +14,14 @@ namespace ChaptersMobileApp.ViewModels
         public ObservableCollection<ObservableBook> Books { get; } = new();
         public ReadingListViewModel(AuthorizationService authorizationService) : base(authorizationService)
         {
-            var chapter = new Chapter { Title = "1231" };
+            var chapter = new Chapter { Title = "12142" };
             var book = new ObservableBook { Title = "Illuzion", Author = "Evgeniy" };
             book.Chapters.Add(chapter);
+            book.Chapters.Add(chapter);
+            book.Chapters.Add(chapter);
 
+            Books.Add(book);
+            Books.Add(book);
             Books.Add(book);
             Books.Add(book);
             Books.Add(book);
