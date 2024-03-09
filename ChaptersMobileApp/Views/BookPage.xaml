@@ -2,6 +2,7 @@
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="ChaptersMobileApp.Views.BookPage"
+             xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
              xmlns:controls="clr-namespace:XGENO.Maui.Controls;assembly=Maui.Controls.RatingView"
              Shell.BackgroundColor="#E8C547">
         <Grid>
@@ -72,12 +73,53 @@
                                         UnRatedFillColor="LightGrey"
                                         StrokeColor="Black"
                                         StrokeWidth="1"/>
-                                <CheckBox Margin="0,2,0,0" Grid.Column="2" VerticalOptions="CenterAndExpand" />
+                            <CheckBox x:Name="checkBoxChapter"  Margin="0,2,0,0" IsChecked="{Binding IsRead}" Grid.Column="2" VerticalOptions="CenterAndExpand" >
+                                <CheckBox.GestureRecognizers>
+                                    <TapGestureRecognizer
+                                                            CommandParameter="{Binding .}"
+                                                            Command="{Binding Source={x:Reference ChaptersSection}, Path=BindingContext.ReadChapterCommand}"/>
+
+
+                                </CheckBox.GestureRecognizers>
+                            </CheckBox>
                             </Grid>
                         <Border StrokeThickness="1" />
                     </VerticalStackLayout>
                     </DataTemplate>
                 </CollectionView.ItemTemplate>
             </CollectionView>
-        </Grid>
+        <CollectionView Grid.Row="2" x:Name="ReviewsSection" ItemsSource="{Binding Reviews}" IsVisible="false" Margin="10,10,10,0">
+            <CollectionView.ItemTemplate>
+                <DataTemplate>
+                    <VerticalStackLayout>
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="20*"/>
+                                <ColumnDefinition Width="80*"/>
+                            </Grid.ColumnDefinitions>
+
+                            <Label Text="{Binding Title}" Grid.Column="1" FontFamily="Bold" LineBreakMode="CharacterWrap" VerticalOptions="Center" FontSize="Large" />
+
+                            <HorizontalStackLayout  Grid.Column="0">
+                                <controls:RatingView
+                            ItemCount="1"
+                            ItemSize="30"
+                            ItemSpacing="6"
+                            Value="1"
+                            RatedFillColor="Yellow"
+                            Margin="0,7,0,0"
+                            UnRatedFillColor="LightGrey"
+                            StrokeColor="Black"
+                            StrokeWidth="1"/>
+                                <Label Text="{Binding AuthorBookRating}" LineBreakMode="CharacterWrap" VerticalOptions="Center" FontSize="Large" />
+                            </HorizontalStackLayout>
+                        </Grid>
+                        <Label Text="{Binding Text}" LineBreakMode="CharacterWrap" />
+
+                        <Border StrokeThickness="1" />
+                    </VerticalStackLayout>
+                </DataTemplate>
+            </CollectionView.ItemTemplate>
+        </CollectionView>
+    </Grid>
 </ContentPage>

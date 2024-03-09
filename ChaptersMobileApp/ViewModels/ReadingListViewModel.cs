@@ -27,9 +27,10 @@ namespace ChaptersMobileApp.ViewModels
         }
 
         [RelayCommand]
-        public async Task ReadChapter()
-        { 
-
+        public async Task ReadChapter(Chapter chapter)
+        {
+            await _webApiService.MarkChapter(chapter.Id);
+            await UpdateBooks();
         }
 
 
@@ -38,20 +39,23 @@ namespace ChaptersMobileApp.ViewModels
         {
             base.Update();
 
-            var username = SecureStorage.GetAsync("username").Result;
-
             Task.Run(async () => await UpdateBooks());
         }
 
         private async Task UpdateBooks()
         {
-            Books.Clear();
+            // TODO: Ну как такое может быть в 21 веке
+            while (await SecureStorage.GetAsync("username") is null)
+            { 
+            }
+
             var books = await _webApiService.GetBooks(BookStatus.Reading);
             await MapEntities(books);
         }
 
         private async Task MapEntities(IEnumerable<GetBooksResult> result)
         {
+            Books.Clear();
             foreach (var book in result)
             {
                 var entity = new ObservableBook {
@@ -62,7 +66,7 @@ namespace ChaptersMobileApp.ViewModels
                 var chapters = await _webApiService.GetChapters(book.Id);
                 foreach (var chapter in chapters.Where(x => !x.IsRead).OrderBy(x => x.Number).Take(3))
                 {
-                    entity.Chapters.Add(new() { Title = chapter.Title, IsRead = chapter.IsRead });
+                    entity.Chapters.Add(new() { Id = chapter.Id, Title = chapter.Title.Trim(), IsRead = chapter.IsRead });
                 }
 
                 Books.Add(entity);

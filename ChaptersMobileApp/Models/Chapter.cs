@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -11,6 +12,8 @@ namespace ChaptersMobileApp.Models
         public int Id { get; set; }
         public string Title { get; set; }
         public double Rating { get; set; }
+
+        [JsonProperty("isRead")]
         public bool IsRead { get; set; }
         public int UserRating { get; set; }
         public DateTime ReadDate { get; set; }

@@ -20,7 +20,7 @@ public partial class BookPage : ContentPage
         ReviewsButton.BackgroundColor = ChaptersButton.BackgroundColor;
         ChaptersButton.BackgroundColor = Colors.Gray;
         ChaptersSection.IsVisible = false;
-
+        ReviewsSection.IsVisible = true;
     }
 
     private void ChaptersButton_Clicked(object sender, EventArgs e)
@@ -31,6 +31,7 @@ public partial class BookPage : ContentPage
         }
         ChaptersButton.BackgroundColor = ReviewsButton.BackgroundColor;
         ReviewsButton.BackgroundColor = Colors.Gray;
+        ReviewsSection.IsVisible = false;
         ChaptersSection.IsVisible = true;
     }
 }

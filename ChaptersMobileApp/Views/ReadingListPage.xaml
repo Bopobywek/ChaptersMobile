@@ -5,6 +5,7 @@
              xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
              ControlTemplate="{StaticResource pageTemplate}"
              xmlns:models="clr-namespace:ChaptersMobileApp.Models"
+             xmlns:vms="clr-namespace:ChaptersMobileApp.ViewModels"
              Shell.NavBarIsVisible="False">
     <Grid>
         <Grid.RowDefinitions>
@@ -23,8 +24,8 @@
             <Label Margin="20,0,20,0" FontSize="30" Text="Читаю сейчас" VerticalOptions="EndAndExpand" />
             <Border StrokeThickness="1" />
         </VerticalStackLayout>
-        
-        <CollectionView Grid.Row="1" Margin="20,0,20,0" ItemsSource="{Binding Books}" IsVisible="{Binding Authorized}">
+
+        <CollectionView x:Name="ChaptersCollection" Grid.Row="1" Margin="20,0,20,0" ItemsSource="{Binding Books}" IsVisible="{Binding Authorized}">
             <CollectionView.ItemTemplate>
                 <DataTemplate>
                     <StackLayout Margin="0,20,0,0">
@@ -67,7 +68,7 @@
                                                     <toolkit:EventToCommandBehavior
                                                             EventName="CheckedChanged"
                                                             CommandParameter="{Binding .}"
-                                                            Command="{Binding ReadChapterCommand}"/>
+                                                            Command="{Binding Source={x:Reference ChaptersCollection}, Path=BindingContext.ReadChapterCommand}"/>
                                                 </CheckBox.Behaviors>
                                             </CheckBox>
                                         </Grid>

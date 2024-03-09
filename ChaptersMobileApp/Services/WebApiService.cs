@@ -6,6 +6,7 @@ using Microsoft.Extensions.Options;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using System.Text;
 using System.Text.Json;
 using System.Threading.Tasks;
@@ -112,6 +113,53 @@ namespace ChaptersMobileApp.Services
 
             var str = await response.Content.ReadAsStringAsync();
             return JsonSerializer.Deserialize<List<GetChapterResult>>(str, _serializerOptions);
+        }
+
+        public async Task<bool> MarkChapter(int chapterId)
+        {
+            var request = new HttpRequestMessage(HttpMethod.Post, $"{_webApiSettings.Url}/api/chapters/{chapterId}");
+
+            var username = await SecureStorage.Default.GetAsync("username");
+            var password = await SecureStorage.Default.GetAsync("password");
+
+            request.Headers.AddBasicAuthHeader(username, password);
+
+            var response = await _httpClient.SendAsync(request);
+            return response.IsSuccessStatusCode;
+        }
+
+        public async Task<List<GetReviewResult>> GetReviews(int bookId)
+        {
+            var request = new HttpRequestMessage(HttpMethod.Get, $"{_webApiSettings.Url}/api/reviews/{bookId}");
+
+            var username = await SecureStorage.Default.GetAsync("username");
+            var password = await SecureStorage.Default.GetAsync("password");
+
+            if (username is not null)
+            {
+                request.Headers.AddBasicAuthHeader(username, password);
+            }
+
+            var response = await _httpClient.SendAsync(request);
+            if (!response.IsSuccessStatusCode)
+            {
+                return new List<GetReviewResult>();
+            }
+            var str = await response.Content.ReadAsStringAsync();
+            return JsonSerializer.Deserialize<List<GetReviewResult>>(str, _serializerOptions);
+        }
+
+        public async Task<bool> UnmarkChapter(int chapterId)
+        {
+            var request = new HttpRequestMessage(HttpMethod.Delete, $"{_webApiSettings.Url}/api/chapters/{chapterId}");
+
+            var username = await SecureStorage.Default.GetAsync("username");
+            var password = await SecureStorage.Default.GetAsync("password");
+
+            request.Headers.AddBasicAuthHeader(username, password);
+
+            var response = await _httpClient.SendAsync(request);
+            return response.IsSuccessStatusCode;
         }
     }
 }
