@@ -10,6 +10,7 @@ namespace ChaptersMobileApp
             Routing.RegisterRoute("register", typeof(RegistrationPage));
             Routing.RegisterRoute("viewBooks", typeof(ViewBooksPage));
             Routing.RegisterRoute("bookView", typeof(BookPage));
+            Routing.RegisterRoute("writeReview", typeof(WriteReviewPage));
             InitializeComponent();
         }
     }

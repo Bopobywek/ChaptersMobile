@@ -161,5 +161,26 @@ namespace ChaptersMobileApp.Services
             var response = await _httpClient.SendAsync(request);
             return response.IsSuccessStatusCode;
         }
+
+        public async Task<bool> PostReview(int bookId, string title, string text)
+        {
+            var request = new HttpRequestMessage(HttpMethod.Post, $"{_webApiSettings.Url}/api/reviews/{bookId}");
+
+            var username = await SecureStorage.Default.GetAsync("username");
+            var password = await SecureStorage.Default.GetAsync("password");
+
+            if (username is not null)
+            {
+                request.Headers.AddBasicAuthHeader(username, password);
+            }
+
+            var item = new { Title = title, Text = text };
+            string json = JsonSerializer.Serialize(item, _serializerOptions);
+            StringContent content = new StringContent(json, Encoding.UTF8, "application/json");
+            request.Content = content;
+
+            var response = await _httpClient.SendAsync(request);
+            return response.IsSuccessStatusCode;
+        }
     }
 }

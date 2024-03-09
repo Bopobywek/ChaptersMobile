@@ -54,8 +54,26 @@ namespace ChaptersMobileApp.ViewModels
             chapter.IsRead = !chapter.IsRead;
         }
 
+        [RelayCommand]
+        public async Task WriteReview(int bookId)
+        {
+            var navigationParameter = new Dictionary<string, object>
+            {
+                { "bookId", bookId }
+            };
+
+            await Shell.Current.GoToAsync("writeReview", navigationParameter);
+        }
+
         public async void ApplyQueryAttributes(IDictionary<string, object> query)
         {
+            if (query.TryGetValue("return", out _))
+            {
+                query.Clear();
+                await Update();
+                return;
+            }
+
             if (!query.TryGetValue("book", out object bookObj))
             {
                 query.Clear();
@@ -69,7 +87,13 @@ namespace ChaptersMobileApp.ViewModels
             UserRating = book.UserRating;
             Cover = book.Cover;
             BookId = book.Id;
+            
+            await Update();
+            query.Clear();
+        }
 
+        private async Task Update()
+        {
             var chapters = await _webApiService.GetChapters(BookId);
             foreach (var chapter in chapters)
             {
@@ -99,8 +123,6 @@ namespace ChaptersMobileApp.ViewModels
                     }
                 );
             }
-
-            query.Clear();
         }
     }
 }

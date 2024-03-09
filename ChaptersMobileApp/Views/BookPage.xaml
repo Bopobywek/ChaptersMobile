@@ -8,8 +8,8 @@
         <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="30*" />
-            <RowDefinition Height="7*" />
-            <RowDefinition Height="60*" />
+            <RowDefinition Height="15*" />
+            <RowDefinition Height="55*" />
         </Grid.RowDefinitions>
         <StackLayout Padding="10" Orientation="Horizontal" VerticalOptions="StartAndExpand">
             <Image Source="{Binding Cover}" WidthRequest="150" HeightRequest="190" Margin="0,0,10,0">
@@ -44,14 +44,19 @@
             <StackLayout>
             </StackLayout>
         </StackLayout>
-        <Grid Grid.Row="1" Margin="5,10,5,0">
+        <Grid Grid.Row="1" Margin="5,10,5,0" RowSpacing="5" ColumnSpacing="5">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="*" />
                     <ColumnDefinition Width="*" />
                 </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                <RowDefinition Height="*" />
+                    <RowDefinition Height="*" />
+                </Grid.RowDefinitions>
                 <Button x:Name="ReviewsButton" Clicked="ReviewsButton_Clicked" BackgroundColor="#E8C547" Text="Рецензии" />
                 <Button x:Name="ChaptersButton" Clicked="ChaptersButton_Clicked" BackgroundColor="Gray" Grid.Column="1" Text="Главы" />
-            </Grid>
+                <Button x:Name="WriteChapter" Command="{Binding WriteReviewCommand}" CommandParameter="{Binding BookId}" Grid.Row="1" Grid.ColumnSpan="2" Clicked="ChaptersButton_Clicked" BackgroundColor="Gray" Text="Написать рецензию" />
+        </Grid>
             <CollectionView Grid.Row="2" x:Name="ChaptersSection" ItemsSource="{Binding Chapters}" IsVisible="false" Margin="10,10,10,0">
                 <CollectionView.ItemTemplate>
                     <DataTemplate>

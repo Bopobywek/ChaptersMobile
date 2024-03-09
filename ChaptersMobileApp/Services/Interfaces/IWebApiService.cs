@@ -15,6 +15,7 @@ namespace ChaptersMobileApp.Services.Interfaces
         Task<List<GetBooksResult>> GetBooks(BookStatus? bookStatus = null);
         Task<List<GetChapterResult>> GetChapters(int bookId);
         Task<List<GetReviewResult>> GetReviews(int bookId);
+        Task<bool> PostReview(int bookId, string title, string text);
         Task<bool> MarkChapter(int chapterId);
         Task<bool> UnmarkChapter(int chapterId);
 
