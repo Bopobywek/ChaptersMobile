@@ -2,6 +2,7 @@
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="ChaptersMobileApp.Views.ReadingListPage"
+             xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
              ControlTemplate="{StaticResource pageTemplate}"
              xmlns:models="clr-namespace:ChaptersMobileApp.Models"
              Shell.NavBarIsVisible="False">
@@ -28,7 +29,7 @@
                 <DataTemplate>
                     <StackLayout Margin="0,20,0,0">
                         <StackLayout Padding="10" Orientation="Horizontal" VerticalOptions="StartAndExpand">
-                            <Image Source="https://raw.githubusercontent.com/Bopobywek/bopo_trunk/main/trianon.jpg" WidthRequest="90" HeightRequest="120" Margin="0,0,10,0">
+                            <Image Source="{Binding Cover}" WidthRequest="90" HeightRequest="120" Margin="0,0,10,0">
                             </Image>
                             <Grid>
                                 <Grid.RowDefinitions>
@@ -61,7 +62,14 @@
                                                 <ColumnDefinition Width="Auto"/>
                                             </Grid.ColumnDefinitions>
                                             <Label FontSize="Medium" VerticalOptions="Center" Text="{Binding Title}" />
-                                            <CheckBox Grid.Column="1" VerticalOptions="Start"/>
+                                            <CheckBox Grid.Column="1" IsChecked="{Binding IsRead}" VerticalOptions="Start">
+                                                <CheckBox.Behaviors>
+                                                    <toolkit:EventToCommandBehavior
+                                                            EventName="CheckedChanged"
+                                                            CommandParameter="{Binding .}"
+                                                            Command="{Binding ReadChapterCommand}"/>
+                                                </CheckBox.Behaviors>
+                                            </CheckBox>
                                         </Grid>
                                     </Border>
                                 </DataTemplate>

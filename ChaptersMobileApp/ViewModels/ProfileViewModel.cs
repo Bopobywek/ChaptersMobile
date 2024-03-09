@@ -129,8 +129,7 @@ namespace ChaptersMobileApp.ViewModels
 
         private List<Book> MapEntities(IEnumerable<GetBooksResult> result)
         {
-            return result.Select((x, index) => new Book { Title = x.Title, Author = x.Author, Rating = x.Rating, Position = index + 1, BookStatus = x.BookStatus, Cover = x.Cover, UserRating = x.UserRating }).ToList();
-
+            return result.Select((x, index) => new Book { Id = x.Id, Title = x.Title, Author = x.Author, Rating = x.Rating, Position = index + 1, BookStatus = x.BookStatus, Cover = x.Cover, UserRating = x.UserRating }).ToList();
         }
 
     }

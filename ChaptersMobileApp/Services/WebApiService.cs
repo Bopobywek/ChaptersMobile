@@ -91,5 +91,27 @@ namespace ChaptersMobileApp.Services
             };
             return handler;
         }
+
+        public async Task<List<GetChapterResult>> GetChapters(int bookId)
+        {
+            var request = new HttpRequestMessage(HttpMethod.Get, $"{_webApiSettings.Url}/api/chapters/{bookId}");
+
+            var username = await SecureStorage.Default.GetAsync("username");
+            var password = await SecureStorage.Default.GetAsync("password");
+
+            if (username is not null)
+            {
+                request.Headers.AddBasicAuthHeader(username, password);
+            }
+
+            var response = await _httpClient.SendAsync(request);
+            if (!response.IsSuccessStatusCode)
+            {
+                return new List<GetChapterResult>();
+            }
+
+            var str = await response.Content.ReadAsStringAsync();
+            return JsonSerializer.Deserialize<List<GetChapterResult>>(str, _serializerOptions);
+        }
     }
 }

@@ -4,19 +4,16 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace ChaptersMobileApp.Models
+namespace ChaptersMobileApp.Services.Results
 {
-    public class Book 
+    public class GetChapterResult
     {
         public int Id { get; set; }
         public string Title { get; set; }
-        public string Author {  get; set; }
+        public int Number {  get; set; }
         public double Rating { get; set; }
-        public int Position { get; set; }
+        public bool IsRead { get; set; }
         public int UserRating { get; set; }
-        public BookStatus BookStatus { get; set; }
-        public string? Cover { get; set; }
-
-        public List<Chapter> Chapters { get; set; }
+        public DateTime ReadDate { get; set; }
     }
 }

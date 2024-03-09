@@ -35,7 +35,8 @@
         </StackLayout>
         
         <!-- TODO: Фикс видимости, если неавторизован и было выбрано это -->
-        <CollectionView x:Name="SubscriptionsSections" IsVisible="false" Grid.Row="1" ItemsSource="{Binding Subscriptions}">
+        <Grid  Grid.Row="1" IsVisible="{Binding Authorized}">
+        <CollectionView x:Name="SubscriptionsSections" IsVisible="false" ItemsSource="{Binding Subscriptions}">
             <CollectionView.ItemTemplate>
                 <DataTemplate>
                     <Grid Margin="0,10,0,10">
@@ -72,5 +73,6 @@
                 </DataTemplate>
             </CollectionView.ItemTemplate>
         </CollectionView>
+        </Grid>
     </Grid>
 </ContentPage>

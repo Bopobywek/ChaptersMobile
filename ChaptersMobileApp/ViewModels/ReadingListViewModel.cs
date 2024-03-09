@@ -1,5 +1,8 @@
 ﻿using ChaptersMobileApp.Models;
 using ChaptersMobileApp.Services;
+using ChaptersMobileApp.Services.Interfaces;
+using ChaptersMobileApp.Services.Results;
+using CommunityToolkit.Mvvm.Input;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -11,22 +14,59 @@ namespace ChaptersMobileApp.ViewModels
 {
     public partial class ReadingListViewModel : AuthorizedViewModel
     {
-        public ObservableCollection<ObservableBook> Books { get; } = new();
-        public ReadingListViewModel(AuthorizationService authorizationService) : base(authorizationService)
-        {
-            var chapter = new Chapter { Title = "12142" };
-            var book = new ObservableBook { Title = "Illuzion", Author = "Evgeniy" };
-            book.Chapters.Add(chapter);
-            book.Chapters.Add(chapter);
-            book.Chapters.Add(chapter);
+        private readonly IWebApiService _webApiService;
 
-            Books.Add(book);
-            Books.Add(book);
-            Books.Add(book);
-            Books.Add(book);
-            Books.Add(book);
-            Books.Add(book);
+        public ObservableCollection<ObservableBook> Books { get; } = new();
+
+        public ReadingListViewModel(AuthorizationService authorizationService,
+            IWebApiService webApiService) : base(authorizationService)
+        {
+            Update();
             authorizationService.AuthorizationChanged += base.Update;
+            _webApiService = webApiService;
+        }
+
+        [RelayCommand]
+        public async Task ReadChapter()
+        { 
+
+        }
+
+
+
+        protected override void Update()
+        {
+            base.Update();
+
+            var username = SecureStorage.GetAsync("username").Result;
+
+            Task.Run(async () => await UpdateBooks());
+        }
+
+        private async Task UpdateBooks()
+        {
+            Books.Clear();
+            var books = await _webApiService.GetBooks(BookStatus.Reading);
+            await MapEntities(books);
+        }
+
+        private async Task MapEntities(IEnumerable<GetBooksResult> result)
+        {
+            foreach (var book in result)
+            {
+                var entity = new ObservableBook {
+                    Id = book.Id,
+                    Title = book.Title,
+                    Author = book.Author,
+                    Cover = book.Cover };
+                var chapters = await _webApiService.GetChapters(book.Id);
+                foreach (var chapter in chapters.Where(x => !x.IsRead).OrderBy(x => x.Number).Take(3))
+                {
+                    entity.Chapters.Add(new() { Title = chapter.Title, IsRead = chapter.IsRead });
+                }
+
+                Books.Add(entity);
+            }
         }
     }
 }

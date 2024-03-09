@@ -1,4 +1,5 @@
 ﻿using ChaptersMobileApp.Models;
+using ChaptersMobileApp.Services.Interfaces;
 using CommunityToolkit.Mvvm.ComponentModel;
 using System;
 using System.Collections.Generic;
@@ -25,19 +26,13 @@ namespace ChaptersMobileApp.ViewModels
 
         [ObservableProperty]
         private string? _cover;
+        private readonly IWebApiService _webApiService;
 
-        public ObservableCollection<Book> Chapters { get; } = new() 
-        { 
-            new Book { Title = "Глава 1. affdadfadfdafdafafda"}, 
-            new Book { Title = "Глава 2. "}, 
-            new Book { Title = "Глава 3. "}, 
-            new Book { Title = "Глава 4. "}, 
-            new Book { Title = "Глава 5. "}, 
-            new Book { Title = "Глава 6. "}, 
-            new Book { Title = "Глава 7. "}, 
-            new Book { Title = "Глава 8. "}, 
-            new Book { Title = "Глава 9. "} 
-        };
+        public ObservableCollection<Chapter> Chapters { get; } = new();
+        public BookViewModel(IWebApiService webApiService)
+        {
+            _webApiService = webApiService;
+        }
 
         public async void ApplyQueryAttributes(IDictionary<string, object> query)
         {
@@ -53,6 +48,19 @@ namespace ChaptersMobileApp.ViewModels
             Rating = book.Rating;
             UserRating = book.UserRating;
             Cover = book.Cover;
+
+            var chapters = await _webApiService.GetChapters(book.Id);
+            foreach (var chapter in chapters)
+            {
+                Chapters.Add(
+                    new()
+                    {
+                        Title = chapter.Title,
+                        IsRead = chapter.IsRead,
+                        UserRating = chapter.UserRating,
+                    }
+                );
+            }
 
             query.Clear();
         }
