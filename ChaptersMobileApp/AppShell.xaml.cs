@@ -11,6 +11,7 @@ namespace ChaptersMobileApp
             Routing.RegisterRoute("viewBooks", typeof(ViewBooksPage));
             Routing.RegisterRoute("bookView", typeof(BookPage));
             Routing.RegisterRoute("writeReview", typeof(WriteReviewPage));
+            Routing.RegisterRoute("viewChapter", typeof(ViewChapterPage));
             InitializeComponent();
         }
     }

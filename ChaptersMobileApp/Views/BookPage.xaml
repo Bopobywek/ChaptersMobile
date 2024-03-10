@@ -57,7 +57,10 @@
                 <Button x:Name="ChaptersButton" Clicked="ChaptersButton_Clicked" BackgroundColor="Gray" Grid.Column="1" Text="Главы" />
                 <Button x:Name="WriteChapter" Command="{Binding WriteReviewCommand}" CommandParameter="{Binding BookId}" Grid.Row="1" Grid.ColumnSpan="2" Clicked="ChaptersButton_Clicked" BackgroundColor="Gray" Text="Написать рецензию" />
         </Grid>
-            <CollectionView Grid.Row="2" x:Name="ChaptersSection" ItemsSource="{Binding Chapters}" IsVisible="false" Margin="10,10,10,0">
+            <CollectionView Grid.Row="2" x:Name="ChaptersSection" ItemsSource="{Binding Chapters}" IsVisible="false" Margin="10,10,10,0"
+                            SelectionMode="Single"
+                            SelectionChangedCommand="{Binding ViewChapterCommand}" 
+                            SelectionChangedCommandParameter="{Binding SelectedItem, Source={x:Reference ChaptersSection}}">
                 <CollectionView.ItemTemplate>
                     <DataTemplate>
                         <VerticalStackLayout>

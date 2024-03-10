@@ -182,5 +182,26 @@ namespace ChaptersMobileApp.Services
             var response = await _httpClient.SendAsync(request);
             return response.IsSuccessStatusCode;
         }
+
+        public async Task<List<GetCommentResult>> GetComments(int chapterId)
+        {
+            var request = new HttpRequestMessage(HttpMethod.Get, $"{_webApiSettings.Url}/api/comments/{chapterId}");
+
+            var username = await SecureStorage.Default.GetAsync("username");
+            var password = await SecureStorage.Default.GetAsync("password");
+
+            if (username is not null)
+            {
+                request.Headers.AddBasicAuthHeader(username, password);
+            }
+
+            var response = await _httpClient.SendAsync(request);
+            if (!response.IsSuccessStatusCode)
+            {
+                return new List<GetCommentResult>();
+            }
+            var str = await response.Content.ReadAsStringAsync();
+            return JsonSerializer.Deserialize<List<GetCommentResult>>(str, _serializerOptions);
+        }
     }
 }

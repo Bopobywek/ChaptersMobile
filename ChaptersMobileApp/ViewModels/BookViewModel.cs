@@ -6,6 +6,7 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
+using System.Net;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -55,6 +56,16 @@ namespace ChaptersMobileApp.ViewModels
         }
 
         [RelayCommand]
+        public async Task ViewChapter(Chapter chapter)
+        {
+            var navigationParameter = new Dictionary<string, object>
+            {
+                { "chapterId", chapter.Id }
+            };
+            await Shell.Current.GoToAsync("viewChapter", navigationParameter);
+        }
+
+        [RelayCommand]
         public async Task WriteReview(int bookId)
         {
             var navigationParameter = new Dictionary<string, object>
@@ -67,6 +78,11 @@ namespace ChaptersMobileApp.ViewModels
 
         public async void ApplyQueryAttributes(IDictionary<string, object> query)
         {
+            if (query.Count == 0)
+            {
+                return;
+            }
+
             if (query.TryGetValue("return", out _))
             {
                 query.Clear();
