@@ -11,7 +11,6 @@ using System.Text;
 using System.Text.Json;
 using System.Threading.Tasks;
 using System.Web;
-using static Android.Icu.Text.CaseMap;
 
 namespace ChaptersMobileApp.Services
 {
@@ -224,6 +223,27 @@ namespace ChaptersMobileApp.Services
 
             var response = await _httpClient.SendAsync(request);
             return response.IsSuccessStatusCode;
+        }
+
+        public async Task<List<GetSubscriptionsResult>> GetSubscriptions()
+        {
+            var request = new HttpRequestMessage(HttpMethod.Get, $"{_webApiSettings.Url}/api/subscribers");
+
+            var username = await SecureStorage.Default.GetAsync("username");
+            var password = await SecureStorage.Default.GetAsync("password");
+
+            if (username is not null)
+            {
+                request.Headers.AddBasicAuthHeader(username, password);
+            }
+
+            var response = await _httpClient.SendAsync(request);
+            if (!response.IsSuccessStatusCode)
+            {
+                return new List<GetSubscriptionsResult>();
+            }
+            var str = await response.Content.ReadAsStringAsync();
+            return JsonSerializer.Deserialize<List<GetSubscriptionsResult>>(str, _serializerOptions);
         }
     }
 }

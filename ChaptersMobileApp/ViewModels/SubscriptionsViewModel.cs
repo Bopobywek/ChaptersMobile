@@ -1,5 +1,6 @@
 ﻿using ChaptersMobileApp.Models;
 using ChaptersMobileApp.Services;
+using ChaptersMobileApp.Services.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -11,16 +12,25 @@ namespace ChaptersMobileApp.ViewModels
 {
     public class SubscriptionsViewModel : AuthorizedViewModel
     {
+        private readonly IWebApiService _webApiService;
+
         public ObservableCollection<Subscription> Subscriptions { get; } = new();
-        public SubscriptionsViewModel(AuthorizationService authorizationService) : base(authorizationService)
+        public SubscriptionsViewModel(AuthorizationService authorizationService, IWebApiService webApiService) : base(authorizationService)
         {
-            var sub = new Subscription { Username = "golubex", BooksCount = 5 };
-            var sub2 = new Subscription { Username = "Aragorn", BooksCount = 228 };
-
-            Subscriptions.Add(sub);
-            Subscriptions.Add(sub2);
-
             authorizationService.AuthorizationChanged += base.Update;
+            _webApiService = webApiService;
+            Task.Run(UpdateSubscriptions);
+        }
+
+        private async Task UpdateSubscriptions()
+        {
+            var subscribers = await _webApiService.GetSubscriptions();
+            foreach (var subscriber in subscribers)
+            {
+                Subscriptions.Add(
+                    new Subscription { Username = subscriber.Username, BooksCount = subscriber.NumberOfBooks }
+                );
+            }
         }
     }
 }
