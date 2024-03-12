@@ -11,6 +11,7 @@ using System.Text;
 using System.Text.Json;
 using System.Threading.Tasks;
 using System.Web;
+using static Android.Icu.Text.CaseMap;
 
 namespace ChaptersMobileApp.Services
 {
@@ -202,6 +203,27 @@ namespace ChaptersMobileApp.Services
             }
             var str = await response.Content.ReadAsStringAsync();
             return JsonSerializer.Deserialize<List<GetCommentResult>>(str, _serializerOptions);
+        }
+
+        public async Task<bool> PostComment(int chapterId, string text)
+        {
+            var request = new HttpRequestMessage(HttpMethod.Post, $"{_webApiSettings.Url}/api/comments/{chapterId}");
+
+            var username = await SecureStorage.Default.GetAsync("username");
+            var password = await SecureStorage.Default.GetAsync("password");
+
+            if (username is not null)
+            {
+                request.Headers.AddBasicAuthHeader(username, password);
+            }
+
+            var item = new { Text = text };
+            string json = JsonSerializer.Serialize(item, _serializerOptions);
+            StringContent content = new StringContent(json, Encoding.UTF8, "application/json");
+            request.Content = content;
+
+            var response = await _httpClient.SendAsync(request);
+            return response.IsSuccessStatusCode;
         }
     }
 }

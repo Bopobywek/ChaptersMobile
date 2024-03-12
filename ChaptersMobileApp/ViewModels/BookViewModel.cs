@@ -60,7 +60,8 @@ namespace ChaptersMobileApp.ViewModels
         {
             var navigationParameter = new Dictionary<string, object>
             {
-                { "chapterId", chapter.Id }
+                { "chapterId", chapter.Id },
+                { "title", chapter.Title }
             };
             await Shell.Current.GoToAsync("viewChapter", navigationParameter);
         }

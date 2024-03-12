@@ -2,34 +2,52 @@
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="ChaptersMobileApp.Views.ViewChapterPage"
+             xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
              Title="{Binding Title}"
+             Shell.BackgroundColor="Aqua"
              ControlTemplate="{StaticResource pageTemplate}">
     <Grid>
         <Grid.RowDefinitions>
-            <RowDefinition Height="80*" />
-            <RowDefinition Height="20*" />
+            <RowDefinition Height="90*" />
+            <RowDefinition Height="10*" />
         </Grid.RowDefinitions>
-    <CollectionView  ItemsSource="{Binding CommentList}" SelectionMode="None">
+    <CollectionView Margin="20,0,20,0" ItemsSource="{Binding CommentList}" SelectionMode="None">
         <CollectionView.ItemTemplate>
             <DataTemplate>
-                <Grid>
+                    <VerticalStackLayout>
+                <Grid RowSpacing="10" Margin="0,10,0,20">
                     <Grid.RowDefinitions>
                         <RowDefinition Height="*" />
-                        <RowDefinition Height="*" />
+                                <RowDefinition Height="*" />
+                                <RowDefinition Height="Auto" />
                     </Grid.RowDefinitions>
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="Auto" />
                         <ColumnDefinition Width="*" />
-                        <ColumnDefinition Width="*" />
+
                     </Grid.ColumnDefinitions>
-                    <Label Text="{Binding AuthorUsername}" />
-                    <Label Text="{Binding Rating}" Grid.Column="2" />
-                    <Label Text="{Binding CreatedAt}" Grid.Column="1" />
-                    <Label Text="{Binding Text}" Grid.ColumnSpan="3" Grid.Row="1" />
+                    <Label Text="{Binding AuthorUsername}" FontSize="Medium" VerticalOptions="Center" />
+                            <HorizontalStackLayout Margin="0,20,0,0" VerticalOptions="EndAndExpand" Grid.Row="3" Grid.Column="2" HorizontalOptions="EndAndExpand" Spacing="10">
+                                <Button MaximumHeightRequest="20" MaximumWidthRequest="20" FontAutoScalingEnabled="True" Text="+" BackgroundColor="Transparent" TextColor="#3498db" BorderColor="#3498db" BorderWidth="1" CornerRadius="5"/>
+                                <Label Text="{Binding Rating}" FontSize="20"  />
+                                <Button  MaximumHeightRequest="20" MaximumWidthRequest="20" Text="-" BackgroundColor="Transparent" TextColor="#3498db" BorderColor="#3498db" BorderWidth="1" CornerRadius="5" />
+                            </HorizontalStackLayout>
+                            <Label VerticalOptions="Center" HorizontalOptions="EndAndExpand" TextColor="Gray" Text="{Binding CreatedAt, StringFormat={}{0:dd\, MMMM\, yyyy\, HH:mm}}" Grid.Row="0" Grid.Column="2" />
+                    <Label Text="{Binding Text}" Grid.ColumnSpan="3" Grid.Row="2" />
                 </Grid>
-            </DataTemplate>
+                    <Border StrokeThickness="1" />
+                    </VerticalStackLayout>
+                </DataTemplate>
         </CollectionView.ItemTemplate>
     </CollectionView>
-           <Entry Grid.Row="1" VerticalOptions="EndAndExpand" Placeholder="Напишите комментарий" />
+    <Grid Grid.Row="1">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="80*" />
+                <ColumnDefinition Width="20*" />
+            </Grid.ColumnDefinitions>
+        <Entry Margin="10,0,0,0" VerticalOptions="EndAndExpand" Text="{Binding CommentText}" Placeholder="Напишите комментарий" />
+        <Button Grid.Column="1" VerticalOptions="EndAndExpand" MaximumHeightRequest="50" Margin="10,0,10,10" Text=">" Command="{Binding SendCommentCommand}" />
+    </Grid>
     </Grid>
 </ContentPage>
