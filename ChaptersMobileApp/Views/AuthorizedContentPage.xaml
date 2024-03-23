@@ -5,6 +5,6 @@
     <StackLayout  VerticalOptions="CenterAndExpand" HorizontalOptions="CenterAndExpand" IsVisible="{Binding Authorized, Converter={StaticResource InvertedBoolConverter}}" Spacing="10">
         <Label Text="Вы должны войти или зарегистрироваться" TextColor="#a9a9a9" HorizontalOptions="Center" VerticalOptions="CenterAndExpand" />
 
-        <Button Text="Войти" Command="{Binding AuthorizeCommand}" BackgroundColor="#E8C547" TextColor="White" HorizontalOptions="Center" />
+        <Button Text="Войти" Command="{Binding AuthorizeCommand}" BorderWidth="0" BorderColor="Transparent" BackgroundColor="#E8C547" TextColor="White" HorizontalOptions="Center" />
     </StackLayout>
 </ContentPage>

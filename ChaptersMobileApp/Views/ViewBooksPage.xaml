@@ -2,7 +2,9 @@
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="ChaptersMobileApp.Views.ViewBooksPage"
-             Shell.BackgroundColor="#E8C547"
+             Shell.BackgroundColor="#FFFEFA"
+             Shell.ForegroundColor="Black"
+             Shell.FlyoutHeight="500"
              xmlns:controls="clr-namespace:XGENO.Maui.Controls;assembly=Maui.Controls.RatingView">
     <CollectionView ItemsSource="{Binding BookList}"
                     SelectionMode="Single" x:Name="ItemsCollectionView"
@@ -34,10 +36,10 @@
                         ItemSize="16"
                         ItemSpacing="6"
                         Value="{Binding UserRating}"
-                        RatedFillColor="Yellow"
-                        UnRatedFillColor="LightGrey"
-                        StrokeColor="Black"
-                        StrokeWidth="1"
+                        RatedFillColor="{DynamicResource ChPink}"
+                        UnRatedFillColor="Transparent"
+                        StrokeColor="{DynamicResource ChPink}"
+                        StrokeWidth="2"
                         HorizontalOptions="Start" VerticalOptions="End" />
                     </Grid>
                     <StackLayout>

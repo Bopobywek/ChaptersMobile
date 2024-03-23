@@ -4,7 +4,8 @@
              x:Class="ChaptersMobileApp.Views.BookPage"
              xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
              xmlns:controls="clr-namespace:XGENO.Maui.Controls;assembly=Maui.Controls.RatingView"
-             Shell.BackgroundColor="#E8C547">
+             Shell.BackgroundColor="#FFFEFA"
+             Shell.ForegroundColor="Black">
         <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="30*" />
@@ -30,15 +31,27 @@
                             LineBreakMode="WordWrap" FontSize="Large" />
                 <Label Grid.Row="1" Text="{Binding Author}"
                             LineBreakMode="WordWrap" FontSize="Medium" />
+                <Picker x:Name="picker" VerticalOptions="Start" Margin="-3,0,0,0"
+                        Grid.Row="2" TitleColor="Transparent">
+                    <Picker.ItemsSource>
+                        <x:Array Type="{x:Type x:String}">
+                            <x:String>Читаю</x:String>
+                            <x:String>Буду читать</x:String>
+                            <x:String>Перестал читать</x:String>
+                            <x:String>Прочитал</x:String>
+                        </x:Array>
+                    </Picker.ItemsSource>
+                </Picker>
+
                 <controls:RatingView Grid.Row="3"
                             ItemCount="5"
-                            ItemSize="16"
+                            ItemSize="30"
                             ItemSpacing="6"
                             Value="{Binding UserRating}"
-                            RatedFillColor="Yellow"
-                            UnRatedFillColor="LightGrey"
-                            StrokeColor="Black"
-                            StrokeWidth="1"
+                            RatedFillColor="{DynamicResource ChPink}"
+                            UnRatedFillColor="Transparent"
+                            StrokeColor="{DynamicResource ChPink}"
+                            StrokeWidth="2"
                             HorizontalOptions="Start" VerticalOptions="End" />
             </Grid>
             <StackLayout>
@@ -53,9 +66,9 @@
                 <RowDefinition Height="*" />
                     <RowDefinition Height="*" />
                 </Grid.RowDefinitions>
-                <Button x:Name="ReviewsButton" Clicked="ReviewsButton_Clicked" BackgroundColor="#E8C547" Text="Рецензии" />
-                <Button x:Name="ChaptersButton" Clicked="ChaptersButton_Clicked" BackgroundColor="Gray" Grid.Column="1" Text="Главы" />
-                <Button x:Name="WriteChapter" Command="{Binding WriteReviewCommand}" CommandParameter="{Binding BookId}" Grid.Row="1" Grid.ColumnSpan="2" Clicked="ChaptersButton_Clicked" BackgroundColor="Gray" Text="Написать рецензию" />
+                <Button x:Name="ReviewsButton" Clicked="ReviewsButton_Clicked" Text="Рецензии" />
+                <Button x:Name="ChaptersButton" Clicked="ChaptersButton_Clicked" BackgroundColor="LightGray" Grid.Column="1" Text="Главы" />
+            <Button x:Name="WriteChapter" Command="{Binding WriteReviewCommand}" CommandParameter="{Binding BookId}" Grid.Row="1" Grid.ColumnSpan="2" Clicked="ChaptersButton_Clicked" BackgroundColor="LightGray" Text="Написать рецензию" />
         </Grid>
             <CollectionView Grid.Row="2" x:Name="ChaptersSection" ItemsSource="{Binding Chapters}" IsVisible="false" Margin="10,10,10,0"
                             SelectionMode="Single"
@@ -76,7 +89,7 @@
                                         ItemSize="16"
                                         ItemSpacing="6"
                                         Value="{Binding UserRating}"
-                                        RatedFillColor="Yellow"
+                                        RatedFillColor="{DynamicResource ChPink}"
                                         Margin="0,7,0,0"
                                         UnRatedFillColor="LightGrey"
                                         StrokeColor="Black"
@@ -96,7 +109,7 @@
                     </DataTemplate>
                 </CollectionView.ItemTemplate>
             </CollectionView>
-        <CollectionView Grid.Row="2" x:Name="ReviewsSection" ItemsSource="{Binding Reviews}" IsVisible="false" Margin="10,10,10,0">
+        <CollectionView Grid.Row="2" x:Name="ReviewsSection" ItemsSource="{Binding Reviews}" IsVisible="false" Margin="20,10,20,0">
             <CollectionView.ItemTemplate>
                 <DataTemplate>
                     <VerticalStackLayout>
@@ -114,7 +127,7 @@
                             ItemSize="30"
                             ItemSpacing="6"
                             Value="1"
-                            RatedFillColor="Yellow"
+                            RatedFillColor="{DynamicResource ChPink}"
                             Margin="0,7,0,0"
                             UnRatedFillColor="LightGrey"
                             StrokeColor="Black"
@@ -122,9 +135,9 @@
                                 <Label Text="{Binding AuthorBookRating}" LineBreakMode="CharacterWrap" VerticalOptions="Center" FontSize="Large" />
                             </HorizontalStackLayout>
                         </Grid>
-                        <Label Text="{Binding Text}" LineBreakMode="CharacterWrap" />
+                        <Label Text="{Binding Text}" Margin="0,10,0,10" FontSize="Medium" LineBreakMode="CharacterWrap" />
 
-                        <Border StrokeThickness="1" />
+                        <Border StrokeThickness="1" Margin="0,0,0,20" />
                     </VerticalStackLayout>
                 </DataTemplate>
             </CollectionView.ItemTemplate>

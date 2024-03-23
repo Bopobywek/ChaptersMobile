@@ -5,18 +5,21 @@
        xmlns:mainViews="clr-namespace:ChaptersMobileApp"
        x:Class="ChaptersMobileApp.AppShell"
        BackgroundColor="#FFFEFA">
-
     <TabBar>
-        <Tab Title="Читаемое">
+        <Tab Title="Читаемое"
+             Icon="reading1.png">
             <ShellContent ContentTemplate="{DataTemplate views:ReadingListPage}"/>
         </Tab>
-        <Tab Title="Подписки">
+        <Tab Title="Подписки"
+             Icon="group.png">
             <ShellContent ContentTemplate="{DataTemplate views:SubscriptionsPage}" />
         </Tab>
-        <Tab Title="Рейтинг">
+        <Tab Title="Рейтинг"
+             Icon="trend.png">
             <ShellContent ContentTemplate="{DataTemplate views:RatingPage}" />
         </Tab>
-        <Tab Title="Профиль">
+        <Tab Title="Профиль"
+             Icon="user.png">
             <ShellContent ContentTemplate="{DataTemplate views:ProfilePage}" />
         </Tab>
     </TabBar>

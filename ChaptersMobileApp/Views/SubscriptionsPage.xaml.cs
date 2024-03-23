@@ -31,23 +31,23 @@ public partial class SubscriptionsPage : ContentPage
 
     private void ButtonSub_Clicked(object sender, EventArgs e)
     {
-        if (ButtonSub.BackgroundColor != Colors.Gray)
+        if (ButtonSub.BackgroundColor != Colors.LightGray)
         {
             return;
         }
         ButtonSub.BackgroundColor = ButtonNew.BackgroundColor;
-        ButtonNew.BackgroundColor = Colors.Gray;
+        ButtonNew.BackgroundColor = Colors.LightGray;
         SubscriptionsSections.IsVisible = true;
     }
 
     private void ButtonNew_Clicked(object sender, EventArgs e)
     {
-        if (ButtonNew.BackgroundColor != Colors.Gray)
+        if (ButtonNew.BackgroundColor != Colors.LightGray)
         {
             return;
         }
         ButtonNew.BackgroundColor = ButtonSub.BackgroundColor;
-        ButtonSub.BackgroundColor = Colors.Gray;
+        ButtonSub.BackgroundColor = Colors.LightGray;
         SubscriptionsSections.IsVisible = false;
     }
 }

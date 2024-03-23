@@ -8,21 +8,25 @@
 
     <Grid>
         <Grid.RowDefinitions>
-            <RowDefinition Height="20*" />
-            <RowDefinition Height="80*" />
+            <RowDefinition Height="15*" />
+            <RowDefinition Height="85*" />
         </Grid.RowDefinitions>
         <StackLayout VerticalOptions="Start" HorizontalOptions="CenterAndExpand" Margin="0,20,0,0">
             <Label Text="Рейтинг книг" FontSize="Large" HorizontalOptions="Center" />
-            <SearchBar Placeholder="Поиск..." Margin="0,0,20,0" />
+            <SearchBar x:Name="searchBar" SearchCommand="{Binding SearchBookCommand}" SearchCommandParameter="{Binding Text, Source={x:Reference searchBar}}" Placeholder="Поиск..." Margin="0,0,20,0" />
         </StackLayout>
 
         <CollectionView Margin="20,0,20,0" Grid.Row="1" ItemsSource="{Binding BookList}" SelectionMode="None">
             <CollectionView.ItemTemplate>
                 <DataTemplate>
-                    <StackLayout Padding="10" Orientation="Horizontal" VerticalOptions="StartAndExpand">
+                    <Grid Padding="10"  VerticalOptions="StartAndExpand">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="30*" />
+                            <ColumnDefinition Width="80*" />
+                        </Grid.ColumnDefinitions>
                         <Image Source="{Binding Cover}" WidthRequest="90" HeightRequest="120" Margin="0,0,10,0">
                         </Image>
-                        <Grid>
+                        <Grid Grid.Column="1">
                             <Grid.RowDefinitions>
                                 <RowDefinition Height="*" />
                                 <RowDefinition Height="*" />
@@ -32,7 +36,7 @@
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="*" />
                                 <ColumnDefinition Width="Auto" />
-                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="Auto" />
                             </Grid.ColumnDefinitions>
                             <Label Text="{Binding Title}" FontSize="Large" />
                             <Label Grid.Row="1" Text="{Binding Author}" FontSize="Medium" />
@@ -41,17 +45,17 @@
                                         ItemSize="16"
                                         ItemSpacing="6"
                                         Value="{Binding Rating}"
-                                        RatedFillColor="Yellow"
-                                        UnRatedFillColor="LightGrey"
-                                        StrokeColor="Black"
-                                        StrokeWidth="1"
+                                            RatedFillColor="{DynamicResource ChPink}"
+                                            UnRatedFillColor="Transparent"
+                                            StrokeColor="{DynamicResource ChPink}"
+                                            StrokeWidth="2"
                                         HorizontalOptions="Start" VerticalOptions="End" />
-                            <Label Grid.Column="2" Text="{Binding Position}" HorizontalOptions="EndAndExpand" FontSize="Large" />
+                            <Label Grid.Column="2" Margin="0,0,0,0" Text="{Binding Position, StringFormat='№{0}'}" HorizontalOptions="End" FontSize="Large" />
                         </Grid>
                         <StackLayout>
                             
                         </StackLayout>
-                    </StackLayout>
+                    </Grid>
                 </DataTemplate>
             </CollectionView.ItemTemplate>
         </CollectionView>

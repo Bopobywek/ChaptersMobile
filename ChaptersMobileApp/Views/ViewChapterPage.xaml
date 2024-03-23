@@ -3,7 +3,9 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="ChaptersMobileApp.Views.ViewChapterPage"
              Title="{Binding Title}"
-             Shell.BackgroundColor="Aqua"
+             Shell.BackgroundColor="{DynamicResource ChYellow}"
+             Shell.TitleColor="Black"
+             Shell.ForegroundColor="Black"
              ControlTemplate="{StaticResource pageTemplate}">
     <Grid>
         <Grid.RowDefinitions>
@@ -28,9 +30,9 @@
                     </Grid.ColumnDefinitions>
                     <Label Text="{Binding AuthorUsername}" FontSize="Medium" VerticalOptions="Center" />
                             <HorizontalStackLayout Margin="0,20,0,0" VerticalOptions="EndAndExpand" Grid.Row="3" Grid.Column="2" HorizontalOptions="EndAndExpand" Spacing="10">
-                                <Button MaximumHeightRequest="20" MaximumWidthRequest="20" FontAutoScalingEnabled="True" Text="+" BackgroundColor="Transparent" TextColor="#3498db" BorderColor="#3498db" BorderWidth="1" CornerRadius="5"/>
-                                <Label Text="{Binding Rating}" FontSize="20"  />
-                                <Button  MaximumHeightRequest="20" MaximumWidthRequest="20" Text="-" BackgroundColor="Transparent" TextColor="#3498db" BorderColor="#3498db" BorderWidth="1" CornerRadius="5" />
+                                <Label FontSize="25" Text="+" TextColor="{DynamicResource Gray900}" VerticalOptions="Center"/>
+                                <Label Text="{Binding Rating}" FontSize="20" VerticalOptions="Center" />
+                                <Label Text="-" FontSize="25" TextColor="{DynamicResource Gray900}" VerticalOptions="Center"  />
                             </HorizontalStackLayout>
                             <Label VerticalOptions="Center" HorizontalOptions="EndAndExpand" TextColor="Gray" Text="{Binding CreatedAt, StringFormat='{}{0:dd\, MMMM\, yyyy\, HH:mm}'}" Grid.Row="0" Grid.Column="2" />
                     <Label Text="{Binding Text}" Grid.ColumnSpan="3" Grid.Row="2" />

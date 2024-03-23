@@ -4,8 +4,8 @@
              x:Class="ChaptersMobileApp.Views.RegistrationPage"
              Shell.NavBarIsVisible="False">
 
-    <StackLayout Padding="20">
-        <Label Text="Отмена" TextColor="#3498db" FontAttributes="Bold" Margin="0,0,0,20">
+    <StackLayout Padding="20" Spacing="10">
+        <Label Text="Отмена" TextColor="Black" FontAttributes="Bold" Margin="0,0,0,20">
             <Label.GestureRecognizers>
                 <TapGestureRecognizer Command="{Binding ReturnCommand}" />
             </Label.GestureRecognizers>

@@ -2,6 +2,7 @@
 using ChaptersMobileApp.Services;
 using ChaptersMobileApp.Services.Interfaces;
 using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.Input;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -35,6 +36,17 @@ namespace ChaptersMobileApp.ViewModels
             {
                 await UpdateBooks();
             });
+        }
+
+        [RelayCommand]
+        public async Task SearchBook(string text)
+        {
+            var newBooks = BookList.Where(book => book.Title.StartsWith(text)).ToList();
+            BookList.Clear();
+            foreach (var entity in newBooks)
+            {
+                BookList.Add(entity);
+            }
         }
 
         private async Task UpdateBooks()
