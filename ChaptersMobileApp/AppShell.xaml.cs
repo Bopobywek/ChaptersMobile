@@ -1,4 +1,5 @@
 ﻿using ChaptersMobileApp.Views;
+using System.Globalization;
 
 namespace ChaptersMobileApp
 {
@@ -12,6 +13,13 @@ namespace ChaptersMobileApp
             Routing.RegisterRoute("bookView", typeof(BookPage));
             Routing.RegisterRoute("writeReview", typeof(WriteReviewPage));
             Routing.RegisterRoute("viewChapter", typeof(ViewChapterPage));
+            Routing.RegisterRoute("comments", typeof(CommentsPage));
+            Routing.RegisterRoute("activities", typeof(ActivityPage));
+            Routing.RegisterRoute("rate", typeof(RatePage));
+            Routing.RegisterRoute("profile", typeof(ProfilePage));
+            CultureInfo russianCulture = new CultureInfo("ru-RU");
+            Thread.CurrentThread.CurrentCulture = russianCulture;
+            Thread.CurrentThread.CurrentUICulture = russianCulture;
             InitializeComponent();
         }
     }

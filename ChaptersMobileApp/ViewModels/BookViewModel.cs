@@ -1,5 +1,6 @@
 ﻿using ChaptersMobileApp.Models;
 using ChaptersMobileApp.Services.Interfaces;
+using ChaptersMobileApp.Views;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using System;
@@ -30,14 +31,29 @@ namespace ChaptersMobileApp.ViewModels
         private double _userRating;
 
         [ObservableProperty]
+        private string _bookStatus;
+        private bool _isChapterRating = false;
+
+        public ObservableCollection<string> Statuses { get; set; } = new ObservableCollection<string>
+        {
+            "Читаю",
+            "Буду читать",
+            "Прочитал",
+            "Перестал читать"
+        };
+
+        [ObservableProperty]
         private string? _cover;
         private readonly IWebApiService _webApiService;
+        private readonly IAlertService _alertService;
 
         public ObservableCollection<Chapter> Chapters { get; } = new();
         public ObservableCollection<Review> Reviews { get; } = new();
-        public BookViewModel(IWebApiService webApiService)
+        public BookViewModel(IWebApiService webApiService, IAlertService alertService)
         {
             _webApiService = webApiService;
+            _alertService = alertService;
+            Task.Run(Update);
         }
 
         [RelayCommand]
@@ -67,6 +83,47 @@ namespace ChaptersMobileApp.ViewModels
         }
 
         [RelayCommand]
+        public async Task SelectStatus(string status)
+        {
+            var bookStatus = (BookStatus)(Statuses.IndexOf(status) + 1);
+            await _webApiService.ChangeBookStatus(BookId, bookStatus);
+        }
+
+        [RelayCommand]
+        public async Task OpenUser(Review review)
+        {
+            var navigationParameter = new Dictionary<string, object>
+            {
+                { "username", review.AuthorUsername },
+                { "userId", review.AuthorId }
+            };
+            await Shell.Current.GoToAsync("profile", navigationParameter);
+        }
+
+        [RelayCommand]
+        public async Task OpenRating()
+        {
+            var navigationParameter = new Dictionary<string, object>
+            {
+                { "currentRating", UserRating },
+                { "itemId", BookId }
+            };
+            await Shell.Current.GoToAsync("rate", navigationParameter);
+        }
+
+        [RelayCommand]
+        public async Task RateChapter(Chapter chapter)
+        {
+            var navigationParameter = new Dictionary<string, object>
+            {
+                { "currentRating", chapter.Rating },
+                { "itemId", chapter.Id }
+            };
+            _isChapterRating = true;
+            await Shell.Current.GoToAsync("rate", navigationParameter);
+        }
+
+        [RelayCommand]
         public async Task WriteReview(int bookId)
         {
             var navigationParameter = new Dictionary<string, object>
@@ -77,10 +134,40 @@ namespace ChaptersMobileApp.ViewModels
             await Shell.Current.GoToAsync("writeReview", navigationParameter);
         }
 
+        [RelayCommand]
+        public async Task LikeReview(Review review)
+        {
+            await _webApiService.RateReview(review.Id, true);
+            await Update();
+        }
+
+        [RelayCommand]
+        public async Task DislikeReview(Review review)
+        {
+            await _webApiService.RateReview(review.Id, false);
+            await Update();
+        }
+
         public async void ApplyQueryAttributes(IDictionary<string, object> query)
         {
             if (query.Count == 0)
             {
+                return;
+            }
+
+            if (query.TryGetValue("userRating", out object userRate))
+            {
+                var userRating = ((double)userRate);
+                if (_isChapterRating)
+                {
+                    _webApiService.RateChapter((int)query["itemId"], (int)userRating);
+                } else
+                {
+                    await _webApiService.RateBook(BookId, (int)userRating);
+                    UserRating = userRating;
+                }
+                await Update();
+                query.Clear();
                 return;
             }
 
@@ -103,6 +190,7 @@ namespace ChaptersMobileApp.ViewModels
             Rating = book.Rating;
             UserRating = book.UserRating;
             Cover = book.Cover;
+            BookStatus = book.BookStatus is Models.BookStatus.NotStarted ? "" : Statuses[(int)book.BookStatus - 1];
             BookId = book.Id;
             
             await Update();
@@ -111,7 +199,11 @@ namespace ChaptersMobileApp.ViewModels
 
         private async Task Update()
         {
+            var bookResult = await _webApiService.GetBook(BookId);
+            Rating = bookResult.Rating;
+
             var chapters = await _webApiService.GetChapters(BookId);
+            Chapters.Clear();
             foreach (var chapter in chapters)
             {
                 Chapters.Add(
@@ -125,6 +217,7 @@ namespace ChaptersMobileApp.ViewModels
                 );
             }
 
+            Reviews.Clear();
             var reviews = await _webApiService.GetReviews(BookId);
             foreach (var review in reviews)
             {
@@ -136,6 +229,8 @@ namespace ChaptersMobileApp.ViewModels
                         Text = review.Text,
                         AuthorBookRating = review.AuthorBookRating,
                         Rating = review.Rating,
+                        UserRating = review.UserRating,
+                        AuthorId = review.AuthorId,
                         AuthorUsername = review.AuthorUsername
                     }
                 );

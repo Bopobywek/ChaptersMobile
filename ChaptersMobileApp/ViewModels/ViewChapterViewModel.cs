@@ -29,6 +29,20 @@ namespace ChaptersMobileApp.ViewModels
         }
 
         [RelayCommand]
+        public async Task LikeComment(Comment comment)
+        {
+            await _webApiService.RateComment(comment.Id, true);
+            await Update();
+        }
+
+        [RelayCommand]
+        public async Task DislikeComment(Comment comment)
+        {
+            await _webApiService.RateComment(comment.Id, false);
+            await Update();
+        }
+
+        [RelayCommand]
         public async Task SendComment()
         {
             if (await _webApiService.PostComment(_chapterId, CommentText))
@@ -45,10 +59,35 @@ namespace ChaptersMobileApp.ViewModels
                                 comment.Text,
                                 comment.Rating,
                                 comment.UserRating,
+                                0,
+                                0,
+                                null,
                                 comment.CreatedAt
                             )
                         );
                 }
+            }
+        }
+
+        private async Task Update()
+        {
+            var comments = await _webApiService.GetComments(_chapterId);
+            CommentList.Clear();
+            foreach (var comment in comments)
+            {
+                CommentList.Add(
+                    new Comment(comment.Id,
+                        comment.AuthorId,
+                        comment.AuthorUsername,
+                        comment.Text,
+                        comment.Rating,
+                        comment.UserRating,
+                        0,
+                        0,
+                        null,
+                        comment.CreatedAt
+                    )
+                );
             }
         }
 
@@ -59,6 +98,7 @@ namespace ChaptersMobileApp.ViewModels
             _chapterId = chapterId;
 
             var comments = await _webApiService.GetComments(chapterId);
+            CommentList.Clear();
             foreach (var comment in comments)
             {
                 CommentList.Add(
@@ -68,6 +108,9 @@ namespace ChaptersMobileApp.ViewModels
                         comment.Text,
                         comment.Rating,
                         comment.UserRating,
+                        0,
+                        0,
+                        null,
                         comment.CreatedAt
                     )
                 );

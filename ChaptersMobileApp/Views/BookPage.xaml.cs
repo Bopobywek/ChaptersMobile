@@ -34,4 +34,10 @@ public partial class BookPage : ContentPage
         ReviewsSection.IsVisible = false;
         ChaptersSection.IsVisible = true;
     }
+
+    private async void picker_SelectedIndexChanged(object sender, EventArgs e)
+    {
+        var viewModel = (BookViewModel)BindingContext;
+        await viewModel.SelectStatus(picker.SelectedItem as string);
+    }
 }

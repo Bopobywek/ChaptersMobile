@@ -9,6 +9,7 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using static System.Reflection.Metadata.BlobBuilder;
 
 namespace ChaptersMobileApp.ViewModels
 {
@@ -41,9 +42,10 @@ namespace ChaptersMobileApp.ViewModels
         [RelayCommand]
         public async Task SearchBook(string text)
         {
-            var newBooks = BookList.Where(book => book.Title.StartsWith(text)).ToList();
+            var newBooks = await _webApiService.SearchBooks(text);
+            var entites = newBooks.Select((x, index) => new Book { Title = x.Title, Author = x.Author, Rating = x.Rating, Position = index + 1, BookStatus = x.BookStatus, Cover = x.Cover }).ToList();
             BookList.Clear();
-            foreach (var entity in newBooks)
+            foreach (var entity in entites)
             {
                 BookList.Add(entity);
             }

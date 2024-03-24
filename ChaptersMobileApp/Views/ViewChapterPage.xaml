@@ -2,24 +2,33 @@
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="ChaptersMobileApp.Views.ViewChapterPage"
+             xmlns:local="clr-namespace:ChaptersMobileApp.Views.Converters"
              Title="{Binding Title}"
-             Shell.BackgroundColor="{DynamicResource ChYellow}"
+             Shell.BackgroundColor="{DynamicResource ChWhite}"
              Shell.TitleColor="Black"
              Shell.ForegroundColor="Black"
              ControlTemplate="{StaticResource pageTemplate}">
+    <ContentPage.Resources>
+        <ResourceDictionary>
+            <local:UserRatingToColorConverter x:Key="userRatingToColor" />
+            <local:UserRatingToPlusColorConverter x:Key="userRatingToPlusColor" />
+            <local:UserRatingToMinusColorConverter x:Key="userRatingToMinusColor" />
+        </ResourceDictionary>
+    </ContentPage.Resources>
+    
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="90*" />
             <RowDefinition Height="10*" />
         </Grid.RowDefinitions>
-    <CollectionView Margin="20,0,20,0" ItemsSource="{Binding CommentList}" SelectionMode="None">
+    <CollectionView x:Name="CommentsSection" Margin="20,0,20,0" ItemsSource="{Binding CommentList}" SelectionMode="None">
         <CollectionView.ItemTemplate>
             <DataTemplate>
                     <VerticalStackLayout>
-                <Grid RowSpacing="10" Margin="0,10,0,20">
+                <Grid RowSpacing="5" Margin="0,10,0,20">
                     <Grid.RowDefinitions>
                         <RowDefinition Height="*" />
-                                <RowDefinition Height="*" />
+                                <RowDefinition Height="Auto" />
                                 <RowDefinition Height="Auto" />
                     </Grid.RowDefinitions>
                     <Grid.ColumnDefinitions>
@@ -28,13 +37,21 @@
                         <ColumnDefinition Width="*" />
 
                     </Grid.ColumnDefinitions>
-                    <Label Text="{Binding AuthorUsername}" FontSize="Medium" VerticalOptions="Center" />
+                    <Label Text="{Binding AuthorUsername}" FontSize="Medium" VerticalOptions="Start" />
                             <HorizontalStackLayout Margin="0,20,0,0" VerticalOptions="EndAndExpand" Grid.Row="3" Grid.Column="2" HorizontalOptions="EndAndExpand" Spacing="10">
-                                <Label FontSize="25" Text="+" TextColor="{DynamicResource Gray900}" VerticalOptions="Center"/>
-                                <Label Text="{Binding Rating}" FontSize="20" VerticalOptions="Center" />
-                                <Label Text="-" FontSize="25" TextColor="{DynamicResource Gray900}" VerticalOptions="Center"  />
+                                <Label FontSize="25" Text="+" TextColor="{Binding UserRating, Converter={StaticResource userRatingToPlusColor}}" VerticalOptions="Center">
+                                    <Label.GestureRecognizers>
+                                        <TapGestureRecognizer Command="{Binding Source={x:Reference CommentsSection}, Path=BindingContext.LikeCommentCommand}" CommandParameter="{Binding .}"/>
+                                    </Label.GestureRecognizers>
+                                </Label>
+                                <Label Text="{Binding Rating}" TextColor="{Binding Rating, Converter={StaticResource userRatingToColor}}" FontSize="20" VerticalOptions="Center" />
+                                <Label Text="-" FontSize="25" TextColor="{Binding UserRating, Converter={StaticResource userRatingToMinusColor}}" VerticalOptions="Center" >
+                                    <Label.GestureRecognizers>
+                                        <TapGestureRecognizer Command="{Binding Source={x:Reference CommentsSection}, Path=BindingContext.DislikeCommentCommand}" CommandParameter="{Binding .}"/>
+                                    </Label.GestureRecognizers>
+                                </Label>
                             </HorizontalStackLayout>
-                            <Label VerticalOptions="Center" HorizontalOptions="EndAndExpand" TextColor="Gray" Text="{Binding CreatedAt, StringFormat='{}{0:dd\, MMMM\, yyyy\, HH:mm}'}" Grid.Row="0" Grid.Column="2" />
+                            <Label VerticalOptions="Center" HorizontalOptions="EndAndExpand" TextColor="Gray" Text="{Binding CreatedAt, StringFormat='{0:dd.MM.yyyy HH:mm}'}" Grid.Row="0" Grid.Column="2" />
                     <Label Text="{Binding Text}" Grid.ColumnSpan="3" Grid.Row="2" />
                 </Grid>
                     <Border StrokeThickness="1" />
@@ -44,11 +61,11 @@
     </CollectionView>
     <Grid Grid.Row="1">
             <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="80*" />
-                <ColumnDefinition Width="20*" />
+                <ColumnDefinition Width="70*" />
+                <ColumnDefinition Width="30*" />
             </Grid.ColumnDefinitions>
         <Entry Margin="10,0,0,0" VerticalOptions="EndAndExpand" Text="{Binding CommentText}" Placeholder="Напишите комментарий" />
-        <Button Grid.Column="1" VerticalOptions="EndAndExpand" MaximumHeightRequest="50" Margin="10,0,10,10" Text=">" Command="{Binding SendCommentCommand}" />
+        <Button Grid.Column="1" VerticalOptions="EndAndExpand" MaximumHeightRequest="50" Margin="10,0,10,10" Text="Отправить" Command="{Binding SendCommentCommand}" />
     </Grid>
     </Grid>
 </ContentPage>

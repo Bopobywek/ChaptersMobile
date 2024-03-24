@@ -13,6 +13,9 @@ namespace ChaptersMobileApp.Models
         string Text,
         int Rating,
         int UserRating,
+        int BookId,
+        int ChapterId,
+        string Relation,
         DateTimeOffset CreatedAt
     );
 }

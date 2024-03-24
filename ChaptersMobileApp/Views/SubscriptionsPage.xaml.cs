@@ -37,6 +37,7 @@ public partial class SubscriptionsPage : ContentPage
         }
         ButtonSub.BackgroundColor = ButtonNew.BackgroundColor;
         ButtonNew.BackgroundColor = Colors.LightGray;
+        EventsSection.IsVisible = false;
         SubscriptionsSections.IsVisible = true;
     }
 
@@ -49,5 +50,6 @@ public partial class SubscriptionsPage : ContentPage
         ButtonNew.BackgroundColor = ButtonSub.BackgroundColor;
         ButtonSub.BackgroundColor = Colors.LightGray;
         SubscriptionsSections.IsVisible = false;
+        EventsSection.IsVisible = true;
     }
 }

@@ -16,6 +16,7 @@ namespace ChaptersMobileApp.Services.Results
         public double Rating { get; set; }
         [JsonPropertyName("isRead")]
         public bool IsRead { get; set; }
+        [JsonPropertyName("userRating")]
         public int UserRating { get; set; }
     }
 }

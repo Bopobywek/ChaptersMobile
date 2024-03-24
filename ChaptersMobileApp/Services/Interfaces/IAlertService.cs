@@ -1,4 +1,5 @@
-﻿using System;
+﻿using CommunityToolkit.Maui.Views;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -10,5 +11,6 @@ namespace ChaptersMobileApp.Services.Interfaces
     {
         Task ShowSnackbar(string text, Color color = default!);
         Task DisplayAlert(string text);
+        Task<object?> ShowPopup(Popup popup);
     }
 }

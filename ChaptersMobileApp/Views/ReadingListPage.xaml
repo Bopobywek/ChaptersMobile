@@ -25,7 +25,7 @@
             <Border StrokeThickness="1" />
         </VerticalStackLayout>
 
-        <CollectionView x:Name="ChaptersCollection" Grid.Row="1" Margin="20,0,20,0" ItemsSource="{Binding Books}" IsVisible="{Binding Authorized}">
+        <CollectionView x:Name="ChaptersCollection" Grid.Row="1" Margin="20,0,20,0" SelectionMode="Single" SelectedItem="{Binding SelectedBook}" SelectionChangedCommand="{Binding OpenBookCommand}" ItemsSource="{Binding Books}" IsVisible="{Binding Authorized}">
             <CollectionView.ItemTemplate>
                 <DataTemplate>
                     <StackLayout Margin="0,20,0,0">

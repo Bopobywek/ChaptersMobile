@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="ChaptersMobileApp.Views.CommentsPage"
+             xmlns:local="clr-namespace:ChaptersMobileApp.Views.Converters"
+             Title="Мои комментарии"
+             Shell.BackgroundColor="{DynamicResource ChWhite}"
+             Shell.TitleColor="Black"
+             Shell.ForegroundColor="Black"
+             ControlTemplate="{StaticResource pageTemplate}">
+    <ContentPage.Resources>
+        <local:UserRatingToColorConverter x:Key="userRatingToColor" />
+        <local:UserRatingToPlusColorConverter x:Key="userRatingToPlusColor" />
+        <local:UserRatingToMinusColorConverter x:Key="userRatingToMinusColor" />
+    </ContentPage.Resources>
+    <Grid>
+        <CollectionView Margin="20,0,20,0" ItemsSource="{Binding Comments}" SelectionMode="None">
+            <CollectionView.ItemTemplate>
+                <DataTemplate>
+                    <VerticalStackLayout>
+                        <Grid RowSpacing="10" Margin="0,10,0,20">
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="*" />
+                                <RowDefinition Height="Auto" />
+                            </Grid.RowDefinitions>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="Auto" />
+                                <ColumnDefinition Width="*" />
+
+                            </Grid.ColumnDefinitions>
+                            <Label Text="{Binding Relation}" Grid.ColumnSpan="2" FontSize="Medium" VerticalOptions="Center" />
+                            <HorizontalStackLayout Margin="0,20,0,0" VerticalOptions="EndAndExpand" Grid.Row="3" Grid.Column="2" HorizontalOptions="EndAndExpand" Spacing="10">
+                                <Label Text="{Binding Rating}" FontSize="20" TextColor="{Binding Rating, Converter={StaticResource userRatingToColor}}" VerticalOptions="Center" />
+                            </HorizontalStackLayout>
+                            <Label VerticalOptions="Center" HorizontalOptions="EndAndExpand" TextColor="Gray" Text="{Binding CreatedAt, StringFormat='{0:dd.MM.yyyy HH:mm}'}" Grid.Row="0" Grid.Column="3" />
+                            <Label Text="{Binding Text}" FontSize="Medium" Grid.ColumnSpan="3" Grid.Row="2" />
+                        </Grid>
+                        <Border StrokeThickness="1" />
+                    </VerticalStackLayout>
+                </DataTemplate>
+            </CollectionView.ItemTemplate>
+        </CollectionView>
+    </Grid>
+</ContentPage>

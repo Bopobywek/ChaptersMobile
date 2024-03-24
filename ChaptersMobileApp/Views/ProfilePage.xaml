@@ -5,6 +5,11 @@
              xmlns:controls="clr-namespace:XGENO.Maui.Controls;assembly=Maui.Controls.RatingView"
              x:Class="ChaptersMobileApp.Views.ProfilePage"
              ControlTemplate="{StaticResource pageTemplate}">
+    <ContentPage.Resources>
+        <ResourceDictionary>
+            <toolkit:InvertedBoolConverter x:Key="InvertedBoolConverter" />
+        </ResourceDictionary>
+    </ContentPage.Resources>
     <StackLayout Spacing="20">
         <StackLayout  VerticalOptions="CenterAndExpand" HorizontalOptions="CenterAndExpand" IsVisible="{Binding Authorized, Converter={StaticResource InvertedBoolConverter}}" Spacing="10">
             <Label Text="Вы должны войти или зарегистрироваться" TextColor="#a9a9a9" HorizontalOptions="Center" VerticalOptions="CenterAndExpand" />
@@ -22,7 +27,7 @@
             </Grid.ColumnDefinitions>
 
             <Label
-               Text="{Binding Username}"
+               Text="{Binding Username, Mode=TwoWay}"
                VerticalOptions="CenterAndExpand"
                Margin="10,20,0,20"
                FontSize="{OnIdiom Phone=Large, Tablet=Large, Default=Medium}" />
@@ -30,6 +35,7 @@
             <ImageButton Source="exit.png" MaximumHeightRequest="30" Aspect="AspectFit"
                 Grid.Column="1"
                 Command="{Binding LogOutCommand}"
+                IsVisible="{Binding MyAccount}"
                 VerticalOptions="CenterAndExpand"
                 Margin="0,0,10,0" />
 
@@ -86,6 +92,9 @@
                             </Grid>
                         </Border>
                     <Border StrokeThickness="2">
+                            <Border.GestureRecognizers>
+                                <TapGestureRecognizer Command="{Binding OpenActivityCommand}"/>
+                            </Border.GestureRecognizers>
                             <Grid>
                                 <Grid.ColumnDefinitions>
                                     <ColumnDefinition Width="auto" />
@@ -106,6 +115,9 @@
                             </Grid>
                         </Border>
                     <Border StrokeThickness="2">
+                            <Border.GestureRecognizers>
+                                <TapGestureRecognizer Command="{Binding ViewCommentsCommand}" />
+                            </Border.GestureRecognizers>
                             <Grid>
                                 <Grid.ColumnDefinitions>
                                     <ColumnDefinition Width="auto" />
@@ -117,7 +129,7 @@
                                         <toolkit:IconTintColorBehavior TintColor="{AppThemeBinding Light={DynamicResource ChPink}, Dark={DynamicResource ChPink}}" />
                                     </Image.Behaviors>
                                 </Image>
-                                <Label Grid.Column="1" FontAttributes="Bold" FontSize="Medium" Padding="10,10,10,10">Комментарии</Label>
+                                <Label Grid.Column="1" FontAttributes="Bold" FontSize="Medium" Padding="10,10,10,10" Text="Комментарии"></Label>
                                 <Image Grid.Column="2" Margin="0,0,10,0" Source="next.png" MaximumHeightRequest="30">
                                     <Image.Behaviors>
                                         <toolkit:IconTintColorBehavior TintColor="{AppThemeBinding Light={DynamicResource ChYellow}, Dark={DynamicResource ChYellow}}" />
@@ -145,7 +157,11 @@
                                 </Image>
                             </Grid>
                         </Border>
-                </VerticalStackLayout>
+                        <VerticalStackLayout IsVisible="{Binding MyAccount, Converter={StaticResource InvertedBoolConverter}}">
+                            <Button Text="Подписаться" Margin="0,10,0,0" BackgroundColor="{DynamicResource ChPink}" IsVisible="{Binding Subscribed, Converter={StaticResource InvertedBoolConverter}}" Command="{Binding SubscribeCommand}" />
+                            <Button Text="Вы подписаны" Margin="0,10,0,0" BackgroundColor="LightGreen" IsVisible="{Binding Subscribed}" Command="{Binding UnsubscribeCommand}" />
+                        </VerticalStackLayout>
+                    </VerticalStackLayout>
             </Grid>
 
                 <!-- Читаю -->

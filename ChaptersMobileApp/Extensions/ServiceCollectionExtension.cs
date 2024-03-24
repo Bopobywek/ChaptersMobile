@@ -21,9 +21,12 @@ namespace ChaptersMobileApp.Extensions
             services.AddSingleton<SubscriptionsPage>();
             services.AddTransient<ProfilePage>();
             services.AddTransient<RatingPage>();
+            services.AddTransient<CommentsPage>();
+            services.AddTransient<ActivityPage>();
             services.AddTransient<WriteReviewPage>();
             services.AddTransient<ViewChapterPage>();
             services.AddTransient<BookPage>();
+            services.AddTransient<RatePage>();
             services.AddTransient<ViewBooksPage>();
             return services;
         }
@@ -37,9 +40,12 @@ namespace ChaptersMobileApp.Extensions
             services.AddSingleton<SubscriptionsViewModel>();
             services.AddTransient<ViewBooksViewModel>();
             services.AddTransient<BookViewModel>();
+            services.AddTransient<ActivityViewModel>();
+            services.AddTransient<CommentsViewModel>();
             services.AddTransient<WriteReviewViewModel>();
             services.AddTransient<ViewChapterViewModel>();
             services.AddSingleton<AuthorizationService>();
+            services.AddSingleton<RateViewModel>();
             services.AddTransient<IAlertService, AlertService>();
             services.AddTransient<IWebApiService, WebApiService>();
             return services;

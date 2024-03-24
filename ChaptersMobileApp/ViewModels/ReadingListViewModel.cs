@@ -2,6 +2,7 @@
 using ChaptersMobileApp.Services;
 using ChaptersMobileApp.Services.Interfaces;
 using ChaptersMobileApp.Services.Results;
+using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using System;
 using System.Collections.Generic;
@@ -15,6 +16,9 @@ namespace ChaptersMobileApp.ViewModels
     public partial class ReadingListViewModel : AuthorizedViewModel
     {
         private readonly IWebApiService _webApiService;
+
+        [ObservableProperty]
+        private ObservableBook? _selectedBook = null;
 
         public ObservableCollection<ObservableBook> Books { get; } = new();
 
@@ -33,6 +37,30 @@ namespace ChaptersMobileApp.ViewModels
             await UpdateBooks();
         }
 
+        [RelayCommand]
+        public async Task OpenBook()
+        {
+            var item = SelectedBook;
+            var bookApi = await _webApiService.GetBook(item.Id);
+            var book = new Book
+            {
+                Id = bookApi.Id,
+                Title = bookApi.Title,
+                Author = bookApi.Author,
+                BookStatus = bookApi.BookStatus,
+                Cover = bookApi.Cover,
+                Rating = bookApi.Rating,
+                UserRating = bookApi.UserRating
+            };
+            var navigationParameter = new Dictionary<string, object>
+            {
+                { "book", book }
+            };
+
+            await Shell.Current.GoToAsync("bookView", navigationParameter);
+            SelectedBook = null;
+        }
+
 
 
         protected override void Update()
@@ -44,7 +72,6 @@ namespace ChaptersMobileApp.ViewModels
 
         private async Task UpdateBooks()
         {
-            // TODO: Ну как такое может быть в 21 веке
             while (await SecureStorage.GetAsync("username") is null)
             { 
             }

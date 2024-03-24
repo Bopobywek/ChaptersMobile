@@ -6,12 +6,11 @@ using System.Threading.Tasks;
 
 namespace ChaptersMobileApp.Models
 {
-    public enum BookStatus
-    {
-        NotStarted = 0,
-        Reading = 1,
-        WillRead = 2,
-        Finished = 3,
-        StopReading = 4
-    }
+    public record Activity(
+        int Id,
+        int UserId,
+        string Username,
+        string Text,
+        DateTimeOffset CreatedAt
+    );
 }

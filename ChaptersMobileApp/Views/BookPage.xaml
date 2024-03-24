@@ -2,10 +2,19 @@
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="ChaptersMobileApp.Views.BookPage"
+             xmlns:local="clr-namespace:ChaptersMobileApp.Views.Converters"
              xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
              xmlns:controls="clr-namespace:XGENO.Maui.Controls;assembly=Maui.Controls.RatingView"
              Shell.BackgroundColor="#FFFEFA"
              Shell.ForegroundColor="Black">
+    <ContentPage.Resources>
+        <ResourceDictionary>
+            <toolkit:SelectedItemEventArgsConverter x:Key="SelectedItemEventArgsConverter" />
+            <local:UserRatingToColorConverter x:Key="userRatingToColor" />
+            <local:UserRatingToPlusColorConverter x:Key="userRatingToPlusColor" />
+            <local:UserRatingToMinusColorConverter x:Key="userRatingToMinusColor" />
+        </ResourceDictionary>
+    </ContentPage.Resources>
         <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="30*" />
@@ -21,9 +30,11 @@
                     <RowDefinition Height="Auto" />
                     <RowDefinition Height="*" />
                     <RowDefinition Height="*" />
+                    <RowDefinition Height="*" />
                 </Grid.RowDefinitions>
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="Auto" />
                     <ColumnDefinition Width="Auto" />
                     <ColumnDefinition Width="*" />
                 </Grid.ColumnDefinitions>
@@ -32,18 +43,11 @@
                 <Label Grid.Row="1" Text="{Binding Author}"
                             LineBreakMode="WordWrap" FontSize="Medium" />
                 <Picker x:Name="picker" VerticalOptions="Start" Margin="-3,0,0,0"
-                        Grid.Row="2" TitleColor="Transparent">
-                    <Picker.ItemsSource>
-                        <x:Array Type="{x:Type x:String}">
-                            <x:String>Читаю</x:String>
-                            <x:String>Буду читать</x:String>
-                            <x:String>Перестал читать</x:String>
-                            <x:String>Прочитал</x:String>
-                        </x:Array>
-                    </Picker.ItemsSource>
+                        Grid.Row="2" TitleColor="Transparent" SelectedIndexChanged="picker_SelectedIndexChanged" SelectedItem="{Binding BookStatus, Mode=TwoWay}" ItemsSource="{Binding Statuses}">
+                 
                 </Picker>
-
-                <controls:RatingView Grid.Row="3"
+                <Label Text="{Binding Rating, StringFormat='Рейтинг: {0:F2}'}" Grid.Row="3" FontSize="Medium"/>
+                <controls:RatingView Grid.Row="4"
                             ItemCount="5"
                             ItemSize="30"
                             ItemSpacing="6"
@@ -52,12 +56,16 @@
                             UnRatedFillColor="Transparent"
                             StrokeColor="{DynamicResource ChPink}"
                             StrokeWidth="2"
-                            HorizontalOptions="Start" VerticalOptions="End" />
+                            HorizontalOptions="Start" VerticalOptions="End" >
+                    <controls:RatingView.GestureRecognizers>
+                        <TapGestureRecognizer Command="{Binding OpenRatingCommand}"/>
+
+
+                    </controls:RatingView.GestureRecognizers>
+                </controls:RatingView>
             </Grid>
-            <StackLayout>
-            </StackLayout>
         </StackLayout>
-        <Grid Grid.Row="1" Margin="5,10,5,0" RowSpacing="5" ColumnSpacing="5">
+        <Grid Grid.Row="1" Margin="10,10,10,0" RowSpacing="5" ColumnSpacing="5">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="*" />
                     <ColumnDefinition Width="*" />
@@ -83,18 +91,23 @@
                                     <ColumnDefinition Width="30*"/>
                                     <ColumnDefinition Width="10*"/>
                                 </Grid.ColumnDefinitions>
-                                <Label Text="{Binding Title}" LineBreakMode="CharacterWrap" VerticalOptions="Center" FontSize="Large" />
-                                <controls:RatingView Grid.Column="1"
+                            <Label Text="{Binding Title}" LineBreakMode="CharacterWrap" VerticalOptions="Center" FontSize="Large" />
+                            <controls:RatingView Grid.Column="1"
                                         ItemCount="5"
                                         ItemSize="16"
                                         ItemSpacing="6"
                                         Value="{Binding UserRating}"
                                         RatedFillColor="{DynamicResource ChPink}"
                                         Margin="0,7,0,0"
-                                        UnRatedFillColor="LightGrey"
-                                        StrokeColor="Black"
-                                        StrokeWidth="1"/>
-                            <CheckBox x:Name="checkBoxChapter"  Margin="0,2,0,0" IsChecked="{Binding IsRead}" Grid.Column="2" VerticalOptions="CenterAndExpand" >
+                                        UnRatedFillColor="Transparent"
+                                        StrokeColor="{DynamicResource ChPink}"
+                                        StrokeWidth="1">
+                                    <controls:RatingView.GestureRecognizers>
+                                    <TapGestureRecognizer CommandParameter="{Binding .}"
+                                        Command="{Binding Source={x:Reference ChaptersSection}, Path=BindingContext.RateChapterCommand}"/>
+                                    </controls:RatingView.GestureRecognizers>
+                                </controls:RatingView>
+                                <CheckBox x:Name="checkBoxChapter"  Margin="0,2,0,0" IsChecked="{Binding IsRead}" Grid.Column="2" VerticalOptions="CenterAndExpand" >
                                 <CheckBox.GestureRecognizers>
                                     <TapGestureRecognizer
                                                             CommandParameter="{Binding .}"
@@ -109,7 +122,7 @@
                     </DataTemplate>
                 </CollectionView.ItemTemplate>
             </CollectionView>
-        <CollectionView Grid.Row="2" x:Name="ReviewsSection" ItemsSource="{Binding Reviews}" IsVisible="false" Margin="20,10,20,0">
+        <CollectionView Grid.Row="2" x:Name="ReviewsSection" ItemsSource="{Binding Reviews}" IsVisible="true" Margin="20,10,20,0">
             <CollectionView.ItemTemplate>
                 <DataTemplate>
                     <VerticalStackLayout>
@@ -123,20 +136,43 @@
 
                             <HorizontalStackLayout  Grid.Column="0">
                                 <controls:RatingView
-                            ItemCount="1"
-                            ItemSize="30"
-                            ItemSpacing="6"
-                            Value="1"
-                            RatedFillColor="{DynamicResource ChPink}"
-                            Margin="0,7,0,0"
-                            UnRatedFillColor="LightGrey"
-                            StrokeColor="Black"
-                            StrokeWidth="1"/>
+                                                    ItemCount="1"
+                                                    ItemSize="30"
+                                                    ItemSpacing="6"
+                                                    Value="1"
+                                                    RatedFillColor="{DynamicResource ChPink}"
+                                                    Margin="0,7,0,0"
+                                                    UnRatedFillColor="Transparent"
+                                                    StrokeColor="{DynamicResource ChPink}"
+                                                    StrokeWidth="1"/>
                                 <Label Text="{Binding AuthorBookRating}" LineBreakMode="CharacterWrap" VerticalOptions="Center" FontSize="Large" />
                             </HorizontalStackLayout>
                         </Grid>
-                        <Label Text="{Binding Text}" Margin="0,10,0,10" FontSize="Medium" LineBreakMode="CharacterWrap" />
-
+                        <Label Text="{Binding Text}" Margin="20,10,0,10" FontSize="Medium" LineBreakMode="CharacterWrap" />
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="*" />
+                            </Grid.ColumnDefinitions>
+                            <Label Text="{Binding AuthorUsername}" FontSize="Medium">
+                                <Label.GestureRecognizers>
+                                <TapGestureRecognizer Command="{Binding Source={x:Reference ReviewsSection}, Path=BindingContext.OpenUserCommand}" CommandParameter="{Binding .}" />
+                                </Label.GestureRecognizers>
+                            </Label>
+                            <HorizontalStackLayout Grid.Column="1" Margin="0,0,10,20" VerticalOptions="EndAndExpand" HorizontalOptions="EndAndExpand" Spacing="10">
+                                <Label FontSize="25" Text="+" TextColor="{Binding UserRating, Converter={StaticResource userRatingToPlusColor}}" VerticalOptions="Center">
+                                    <Label.GestureRecognizers>
+                                        <TapGestureRecognizer Command="{Binding Source={x:Reference ReviewsSection}, Path=BindingContext.LikeReviewCommand}" CommandParameter="{Binding .}"/>
+                                    </Label.GestureRecognizers>
+                                </Label>
+                                <Label Text="{Binding Rating}" TextColor="{Binding Rating, Converter={StaticResource userRatingToColor}}" FontSize="20" VerticalOptions="Center" />
+                                <Label Text="-" FontSize="25" TextColor="{Binding UserRating, Converter={StaticResource userRatingToMinusColor}}" VerticalOptions="Center" >
+                                    <Label.GestureRecognizers>
+                                        <TapGestureRecognizer Command="{Binding Source={x:Reference ReviewsSection}, Path=BindingContext.DislikeReviewCommand}" CommandParameter="{Binding .}"/>
+                                    </Label.GestureRecognizers>
+                                </Label>
+                            </HorizontalStackLayout>
+                        </Grid>
                         <Border StrokeThickness="1" Margin="0,0,0,20" />
                     </VerticalStackLayout>
                 </DataTemplate>

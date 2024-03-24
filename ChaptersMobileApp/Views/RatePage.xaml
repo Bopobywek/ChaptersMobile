@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="ChaptersMobileApp.Views.RatePage"
+               xmlns:input="clr-namespace:InputKit.Shared.Controls;assembly=InputKit.Maui"
+             Shell.ForegroundColor="Black"
+             Title="Поставить оценку">
+    <StackLayout Spacing="12" Padding="50" VerticalOptions="CenterAndExpand">
+
+        <Grid>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="Auto" />
+            </Grid.ColumnDefinitions>
+            <Label Text="0" />
+            <Slider  x:Name="rateSlider" Grid.Column="1" Value="{Binding Rating}"  Minimum="0" Maximum="5" ValueChanged="Slider_ValueChanged" />
+            <Label Text="5" Grid.Column="2" />
+
+        </Grid>
+        <Label x:Name="rateValue"  HorizontalOptions="CenterAndExpand" Text="0" />
+        <Button Text="Оценить" Margin="0,20,0,0" Command="{Binding RateCommand}" />
+    </StackLayout>
+</ContentPage>

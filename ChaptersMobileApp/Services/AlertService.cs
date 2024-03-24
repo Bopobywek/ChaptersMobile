@@ -1,6 +1,7 @@
 ﻿using ChaptersMobileApp.Services.Interfaces;
 using CommunityToolkit.Maui.Alerts;
 using CommunityToolkit.Maui.Core;
+using CommunityToolkit.Maui.Views;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -19,7 +20,7 @@ namespace ChaptersMobileApp.Services
             var snackbarOptions = new SnackbarOptions
             {
                 BackgroundColor = color ?? Colors.Red,
-                TextColor = Colors.Black,
+                TextColor = Colors.White,
                 ActionButtonTextColor = Colors.Yellow,
                 CornerRadius = new CornerRadius(10),
                 Font = Font.SystemFontOfSize(14),
@@ -35,6 +36,11 @@ namespace ChaptersMobileApp.Services
 
         public async Task DisplayAlert(string text) {
             await Application.Current.MainPage.DisplayAlert("Ошибка", text, "OK");
+        }
+
+        public async Task<object?> ShowPopup(Popup popup)
+        {
+            return await Shell.Current.CurrentPage.ShowPopupAsync(popup);
         }
     }
 }

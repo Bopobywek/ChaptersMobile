@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="ChaptersMobileApp.Views.ActivityPage"
+             xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
+             xmlns:controls="clr-namespace:XGENO.Maui.Controls;assembly=Maui.Controls.RatingView"
+             Shell.BackgroundColor="#FFFEFA"
+             Shell.ForegroundColor="Black"
+             Title="Мои события">
+    <CollectionView IsVisible="true" IsGrouped="True" ItemsSource="{Binding Activities}">
+        <CollectionView.ItemTemplate>
+            <DataTemplate>
+                <VerticalStackLayout x:Name="ActivitiesContainer"  Margin="50,10,20,10" Spacing="5">
+                    <Grid  ColumnSpacing="10">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="*" />
+                            <RowDefinition Height="Auto" />
+                        </Grid.RowDefinitions>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="*" />
+                        </Grid.ColumnDefinitions>
+                        <Label Text="{Binding CreatedAt, StringFormat='{0:HH:mm}'}" FontSize="Medium" />
+                        <Label Text="{Binding Text}" LineBreakMode="WordWrap" MaxLines="100" Grid.Row="1" Grid.ColumnSpan="2" FontSize="Medium" />
+                    </Grid>
+                    <Border StrokeThickness="1" BackgroundColor="Black"/>
+                </VerticalStackLayout>
+            </DataTemplate>
+        </CollectionView.ItemTemplate>
+        <CollectionView.GroupHeaderTemplate>
+            <DataTemplate>
+                <VerticalStackLayout Margin="20,0,20,0" Spacing="5">
+                    <Label Text="{Binding CreatedAt, StringFormat='{0:dd MMMM}'}" 
+                   BackgroundColor="Transparent"
+                   FontSize="Large" FontAttributes="Bold" />
+                    <Border StrokeThickness="1" BackgroundColor="Black"/>
+                </VerticalStackLayout>
+            </DataTemplate>
+        </CollectionView.GroupHeaderTemplate>
+    </CollectionView>
+</ContentPage>
