@@ -1,5 +1,7 @@
 ﻿using ChaptersMobileApp.Models;
+using ChaptersMobileApp.Services.Interfaces;
 using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.Input;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -11,25 +13,47 @@ namespace ChaptersMobileApp.ViewModels
 {
     public partial class CommentsViewModel : ObservableValidator, IQueryAttributable
     {
-        public ObservableCollection<Comment> Comments { get; } = new();
-        public CommentsViewModel()
-        {
+        private readonly IWebApiService webApiService;
 
+        [ObservableProperty]
+        private Comment _selectedComment = null;
+        private string? username = null;
+
+        public ObservableCollection<Comment> Comments { get; } = new();
+        public CommentsViewModel(IWebApiService webApiService)
+        {
+            this.webApiService = webApiService;
         }
 
-        public void ApplyQueryAttributes(IDictionary<string, object> query)
+        [RelayCommand]
+        public async Task OpenComment(Comment comment)
         {
+            var navigationParameter = new Dictionary<string, object>
+            {
+                { "chapterId", comment.ChapterId },
+                { "bookId", comment.BookId },
+                { "username", username }
+            };
+            await Shell.Current.GoToAsync("viewChapter", navigationParameter);
+            SelectedComment = null;
+        }
+
+        public async void ApplyQueryAttributes(IDictionary<string, object> query)
+        {
+            username = (string)query["username"];
+            var comments = await webApiService.GetCommentsByUser(username);
             query.Clear();
 
             Comments.Clear();
-
-            Comments.Add(
-                new Comment(1, 1, "abc", "Очень интересная глава!", 10, 1, 0, 0, "К главе главе Театр Магии книги Иллюзион", DateTimeOffset.UtcNow.AddDays(-10)
-                ));
-
-            Comments.Add(
-                new Comment(1, 1, "abc", "Круть!", 1, 1, 0, 0, "К главе Отражение книги Иллюзион", DateTimeOffset.UtcNow.AddDays(-10)
-                ));
+            foreach (var comment in comments)
+            {
+                var book = await webApiService.GetBook(comment.BookId);
+                var chapter = (await webApiService.GetChapters(comment.BookId)).Single(ch => ch.Id == comment.ChapterId);
+                Comments.Add(
+                    new Comment(comment.Id, comment.AuthorId, comment.AuthorUsername,
+                    comment.Text, comment.Rating, comment.UserRating, comment.BookId, comment.ChapterId, $"К главе {chapter.Title} книги {book.Title}", comment.CreatedAt)
+                );
+            }
         }
     }
 }

@@ -10,7 +10,7 @@
             <RowDefinition Height="12*"/>
             <RowDefinition Height="88*"/>
         </Grid.RowDefinitions>
-        <StackLayout Grid.RowSpan="2" Spacing="20" VerticalOptions="StartAndExpand" HorizontalOptions="CenterAndExpand">
+        <StackLayout Grid.RowSpan="2" Spacing="20" VerticalOptions="CenterAndExpand" HorizontalOptions="CenterAndExpand">
             <StackLayout VerticalOptions="StartAndExpand" HorizontalOptions="CenterAndExpand" IsVisible="{Binding Authorized, Converter={StaticResource InvertedBoolConverter}}" Spacing="10">
                 <Label Text="Вы должны войти или зарегистрироваться" TextColor="#a9a9a9" HorizontalOptions="Center" VerticalOptions="CenterAndExpand" />
 
@@ -36,8 +36,14 @@
         
         <!-- TODO: Фикс видимости, если неавторизован и было выбрано это -->
         <Grid  Grid.Row="1" IsVisible="{Binding Authorized}">
-        <CollectionView x:Name="SubscriptionsSections" IsVisible="false" ItemsSource="{Binding Subscriptions}">
-            <CollectionView.ItemTemplate>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+            </Grid.RowDefinitions>
+            <SearchBar  IsVisible="false" x:Name="searchBarUser" Grid.Row="0" SearchCommand="{Binding SearchUserCommand}" SearchCommandParameter="{Binding Text, Source={x:Reference searchBarUser}}" Placeholder="Поиск пользователя..." Margin="0,0,20,10" />
+
+            <CollectionView x:Name="SubscriptionsSections" Grid.Row="1" IsVisible="false" ItemsSource="{Binding Subscriptions}"  SelectionMode="Single" SelectedItem="{Binding SelectedSub}" SelectionChangedCommand="{Binding OpenSubCommand}" SelectionChangedCommandParameter="{Binding SelectedItem, Source={x:Reference SubscriptionsSections}}">
+                <CollectionView.ItemTemplate>
                 <DataTemplate>
                     <Grid Margin="0,10,0,10">
                         <Grid.RowDefinitions>
@@ -68,13 +74,13 @@
                                 HorizontalOptions="Center" />
                         </Border>
                         <Label Text="{Binding Username}" FontSize="Medium" Grid.Column="1" Grid.ColumnSpan="4" VerticalOptions="CenterAndExpand" />
-                        <Label Text="{Binding BookCount, StringFormat='Книг: {0}'}" FontSize="Medium" VerticalOptions="Start" Grid.ColumnSpan="4" Grid.Column="1" Grid.Row="1" />
+                        <Label Text="{Binding BooksCount, StringFormat='Книг: {0}'}" FontSize="Medium" VerticalOptions="Start" Grid.ColumnSpan="4" Grid.Column="1" Grid.Row="1" />
                     </Grid>
                 </DataTemplate>
             </CollectionView.ItemTemplate>
         </CollectionView>
 
-            <CollectionView x:Name="EventsSection" IsVisible="true" IsGrouped="True" ItemsSource="{Binding Activities}">
+            <CollectionView x:Name="EventsSection" Grid.Row="1" SelectionMode="None" IsVisible="true" IsGrouped="True" ItemsSource="{Binding Activities}">
                 <CollectionView.ItemTemplate>
                     <DataTemplate>
                         <VerticalStackLayout x:Name="ActivitiesContainer"  Margin="50,10,20,10" Spacing="5">

@@ -272,7 +272,7 @@ namespace ChaptersMobileApp.Services
 
         public async Task<bool> PostReview(int bookId, string title, string text)
         {
-            var request = new HttpRequestMessage(HttpMethod.Post, $"{_webApiSettings.Url}/api/reviews/{bookId}");
+            var request = new HttpRequestMessage(HttpMethod.Post, $"{_webApiSettings.Url}/api/reviews");
 
             var username = await SecureStorage.Default.GetAsync("username");
             var password = await SecureStorage.Default.GetAsync("password");
@@ -282,9 +282,7 @@ namespace ChaptersMobileApp.Services
                 request.Headers.AddBasicAuthHeader(username, password);
             }
 
-            var item = new { Title = title, Text = text };
-            string json = JsonSerializer.Serialize(item, _serializerOptions);
-            StringContent content = new StringContent(json, Encoding.UTF8, "application/json");
+            StringContent content = new StringContent($"\"bookId\": {bookId}, \"title\": \"{title}\", \"text\": \"{text}\"", Encoding.UTF8, "application/json");
             request.Content = content;
 
             var response = await _httpClient.SendAsync(request);
@@ -293,10 +291,7 @@ namespace ChaptersMobileApp.Services
 
         public async Task<List<GetUserReviewResult>> GetReviewsByUser(string author)
         {
-            var request = new HttpRequestMessage(HttpMethod.Get, $"{_webApiSettings.Url}/api/reviews/user")
-            {
-                Content = new StringContent(author, Encoding.UTF8, MediaTypeNames.Application.Json)
-            };
+            var request = new HttpRequestMessage(HttpMethod.Get, $"{_webApiSettings.Url}/api/reviews/user?author={author}");
 
             var username = await SecureStorage.Default.GetAsync("username");
             var password = await SecureStorage.Default.GetAsync("password");
@@ -360,7 +355,7 @@ namespace ChaptersMobileApp.Services
 
         public async Task<bool> PostComment(int chapterId, string text)
         {
-            var request = new HttpRequestMessage(HttpMethod.Post, $"{_webApiSettings.Url}/api/comments/{chapterId}");
+            var request = new HttpRequestMessage(HttpMethod.Post, $"{_webApiSettings.Url}/api/comments");
 
             var username = await SecureStorage.Default.GetAsync("username");
             var password = await SecureStorage.Default.GetAsync("password");
@@ -370,9 +365,7 @@ namespace ChaptersMobileApp.Services
                 request.Headers.AddBasicAuthHeader(username, password);
             }
 
-            var item = new { Text = text };
-            string json = JsonSerializer.Serialize(item, _serializerOptions);
-            StringContent content = new StringContent(json, Encoding.UTF8, "application/json");
+            StringContent content = new StringContent($"{{ \"chapterId\": {chapterId}, \"text\": \"{text}\" }}", Encoding.UTF8, "application/json");
             request.Content = content;
 
             var response = await _httpClient.SendAsync(request);
@@ -381,10 +374,7 @@ namespace ChaptersMobileApp.Services
 
         public async Task<List<GetUserCommentResult>> GetCommentsByUser(string author)
         {
-            var request = new HttpRequestMessage(HttpMethod.Get, $"{_webApiSettings.Url}/api/comments/user")
-            {
-                Content = new StringContent(author, Encoding.UTF8, MediaTypeNames.Application.Json)
-            };
+            var request = new HttpRequestMessage(HttpMethod.Get, $"{_webApiSettings.Url}/api/comments/user?author={author}");
 
             var username = await SecureStorage.Default.GetAsync("username");
             var password = await SecureStorage.Default.GetAsync("password");
@@ -464,7 +454,7 @@ namespace ChaptersMobileApp.Services
 
         public async Task<List<GetUserActivityResult>> GetUserActivities(string username)
         {
-            var request = new HttpRequestMessage(HttpMethod.Get, $"{_webApiSettings.Url}/api/subscribers/{username}");
+            var request = new HttpRequestMessage(HttpMethod.Get, $"{_webApiSettings.Url}/api/activities/{username}");
 
             var name = await SecureStorage.Default.GetAsync("username");
             var password = await SecureStorage.Default.GetAsync("password");
@@ -526,6 +516,28 @@ namespace ChaptersMobileApp.Services
 
             var str = await response.Content.ReadAsStringAsync();
             return JsonSerializer.Deserialize<List<GetSubscriptionsResult>>(str, _serializerOptions);
+        }
+
+        public async Task<List<GetUsersResult>> SearchUsers(string q)
+        {
+            var request = new HttpRequestMessage(HttpMethod.Post, $"{_webApiSettings.Url}/api/subscribers/search?q={q}");
+
+            var username = await SecureStorage.Default.GetAsync("username");
+            var password = await SecureStorage.Default.GetAsync("password");
+
+            if (username is not null)
+            {
+                request.Headers.AddBasicAuthHeader(username, password);
+            }
+
+            var response = await _httpClient.SendAsync(request);
+            if (!response.IsSuccessStatusCode)
+            {
+                return new List<GetUsersResult>();
+            }
+
+            var str = await response.Content.ReadAsStringAsync();
+            return JsonSerializer.Deserialize<List<GetUsersResult>>(str, _serializerOptions) ?? new List<GetUsersResult>();
         }
     }
 }

@@ -14,9 +14,40 @@
             <ContentPresenter Grid.Row="0" />
             <BoxView HorizontalOptions="FillAndExpand" HeightRequest="1" Color="#A29E90" VerticalOptions="EndAndExpand" Grid.Row="1"/>
         </Grid>
-    </ControlTemplate>
 
-        <Style TargetType="TabBar">
+        
+    </ControlTemplate>
+    <Style TargetType="Grid">
+        <Setter Property="VisualStateManager.VisualStateGroups">
+            <VisualStateGroupList>
+                <VisualStateGroup x:Name="CommonStates">
+                    <VisualState x:Name="Normal" />
+                    <VisualState x:Name="Selected">
+                        <VisualState.Setters>
+                            <Setter Property="BackgroundColor"
+                                Value="{DynamicResource ChPink}" />
+                        </VisualState.Setters>
+                    </VisualState>
+                </VisualStateGroup>
+            </VisualStateGroupList>
+        </Setter>
+    </Style>
+    <Style TargetType="StackLayout">
+        <Setter Property="VisualStateManager.VisualStateGroups">
+            <VisualStateGroupList>
+                <VisualStateGroup x:Name="CommonStates">
+                    <VisualState x:Name="Normal" />
+                    <VisualState x:Name="Selected">
+                        <VisualState.Setters>
+                            <Setter Property="BackgroundColor"
+                                Value="{DynamicResource ChPink}" />
+                        </VisualState.Setters>
+                    </VisualState>
+                </VisualStateGroup>
+            </VisualStateGroupList>
+        </Setter>
+    </Style>
+    <Style TargetType="TabBar">
         <Setter Property="Shell.TabBarBackgroundColor"
             Value="#FAFDFF" />
         <Setter Property="Shell.TabBarTitleColor"

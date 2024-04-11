@@ -11,6 +11,7 @@ public partial class SubscriptionsPage : ContentPage
 		InitializeComponent();
         _viewModel = subscriptionsViewModel;
         BindingContext = _viewModel;
+        searchBarUser.TextChanged += OnTextChanged;
     }
 
     protected override void OnNavigatedTo(NavigatedToEventArgs args)
@@ -39,6 +40,7 @@ public partial class SubscriptionsPage : ContentPage
         ButtonNew.BackgroundColor = Colors.LightGray;
         EventsSection.IsVisible = false;
         SubscriptionsSections.IsVisible = true;
+        searchBarUser.IsVisible = true;
     }
 
     private void ButtonNew_Clicked(object sender, EventArgs e)
@@ -50,6 +52,19 @@ public partial class SubscriptionsPage : ContentPage
         ButtonNew.BackgroundColor = ButtonSub.BackgroundColor;
         ButtonSub.BackgroundColor = Colors.LightGray;
         SubscriptionsSections.IsVisible = false;
+        searchBarUser.IsVisible = false;
         EventsSection.IsVisible = true;
+    }
+
+    private void OnTextChanged(object sender, TextChangedEventArgs args)
+    {
+        if (searchBarUser.Text.Length > 0)
+        {
+            _viewModel.SearchUserCommand.Execute(searchBarUser.Text);
+        }
+        else
+        {
+            MainThread.InvokeOnMainThreadAsync(_viewModel.UpdateSubscriptions);
+        }
     }
 }

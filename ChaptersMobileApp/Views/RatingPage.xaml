@@ -16,7 +16,7 @@
             <SearchBar x:Name="searchBar" SearchCommand="{Binding SearchBookCommand}" SearchCommandParameter="{Binding Text, Source={x:Reference searchBar}}" Placeholder="Поиск..." Margin="0,0,20,0" />
         </StackLayout>
 
-        <CollectionView Margin="20,0,20,0" Grid.Row="1" ItemsSource="{Binding BookList}" SelectionMode="None">
+        <CollectionView Margin="20,0,20,0" x:Name="RatingCollection" Grid.Row="1" ItemsSource="{Binding BookList}" SelectionMode="Single" SelectedItem="{Binding SelectedBook}" SelectionChangedCommand="{Binding OpenBookCommand}" SelectionChangedCommandParameter="{Binding SelectedItem, Source={x:Reference RatingCollection}}">
             <CollectionView.ItemTemplate>
                 <DataTemplate>
                     <Grid Padding="10"  VerticalOptions="StartAndExpand">

@@ -17,6 +17,8 @@ namespace ChaptersMobileApp
             Routing.RegisterRoute("activities", typeof(ActivityPage));
             Routing.RegisterRoute("rate", typeof(RatePage));
             Routing.RegisterRoute("profile", typeof(ProfilePage));
+            Routing.RegisterRoute("reviewsList", typeof(ReviewsList));
+            Routing.RegisterRoute("subsList", typeof(SubscribersListPage));
             CultureInfo russianCulture = new CultureInfo("ru-RU");
             Thread.CurrentThread.CurrentCulture = russianCulture;
             Thread.CurrentThread.CurrentUICulture = russianCulture;

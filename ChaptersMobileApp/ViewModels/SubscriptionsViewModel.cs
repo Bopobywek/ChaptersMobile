@@ -1,6 +1,8 @@
 ﻿using ChaptersMobileApp.Models;
 using ChaptersMobileApp.Services;
 using ChaptersMobileApp.Services.Interfaces;
+using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.Input;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -10,9 +12,11 @@ using System.Threading.Tasks;
 
 namespace ChaptersMobileApp.ViewModels
 {
-    public class SubscriptionsViewModel : AuthorizedViewModel
+    public partial class SubscriptionsViewModel : AuthorizedViewModel
     {
         private readonly IWebApiService _webApiService;
+        [ObservableProperty]
+        private Subscription? _selectedSub = null;
 
         public ObservableCollection<Subscription> Subscriptions { get; } = new();
         public ObservableCollection<ActivityGroup> Activities { get; } = new();
@@ -20,16 +24,43 @@ namespace ChaptersMobileApp.ViewModels
         {
             authorizationService.AuthorizationChanged += base.Update;
             _webApiService = webApiService;
-            Task.Run(UpdateSubscriptions);
+            MainThread.InvokeOnMainThreadAsync(UpdateSubscriptions);
+        }
+
+        [RelayCommand]
+        public async Task SearchUser(string text)
+        {
+            var users = await _webApiService.SearchUsers(text);
+            Subscriptions.Clear();
+            foreach (var subscriber in users)
+            {
+                Subscriptions.Add(
+                    new Subscription { Username = subscriber.Username, BooksCount = subscriber.NumberOfBooks, UserId = subscriber.UserId }
+                );
+            }
         }
 
         protected override void Update()
         {
             base.Update();
-            Task.Run(UpdateSubscriptions);
+            MainThread.InvokeOnMainThreadAsync(UpdateSubscriptions);
         }
 
-        private async Task UpdateSubscriptions()
+        [RelayCommand]
+        public async Task OpenSub(Subscription subscription)
+        {
+            await MainThread.InvokeOnMainThreadAsync(async () =>
+            {
+                var navigationParameter = new Dictionary<string, object>
+            {
+                { "username", subscription.Username },
+                { "userId", subscription.UserId }
+            };
+                await Shell.Current.GoToAsync("profile", navigationParameter);
+            });
+        }
+
+        public async Task UpdateSubscriptions()
         {
             var username = await SecureStorage.GetAsync("username");
             var subscribers = await _webApiService.GetSubscriptions(username!);
@@ -54,7 +85,7 @@ namespace ChaptersMobileApp.ViewModels
                 groups[dateOnly].Add(new Activity(activity.Id, activity.UserId, activity.Username, activity.Text, activity.CreatedAt));
             }
             Activities.Clear();
-            foreach (var kv in groups.OrderBy(x => x.Key))
+            foreach (var kv in groups.OrderByDescending(x => x.Key))
             {
                 Activities.Add(
                     new ActivityGroup(new DateTimeOffset(kv.Key, new TimeOnly(0, 0), TimeSpan.Zero),

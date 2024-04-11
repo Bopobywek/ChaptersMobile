@@ -20,6 +20,8 @@ namespace ChaptersMobileApp.ViewModels
         [ObservableProperty]
         private ObservableBook? _selectedBook = null;
 
+        private int? _chapterBookId = null;
+
         public ObservableCollection<ObservableBook> Books { get; } = new();
 
         public ReadingListViewModel(AuthorizationService authorizationService,
@@ -34,7 +36,14 @@ namespace ChaptersMobileApp.ViewModels
         public async Task ReadChapter(Chapter chapter)
         {
             await _webApiService.MarkChapter(chapter.Id);
-            await UpdateBooks();
+            foreach (var book in Books)
+            {
+                if (book.Chapters.Any(ch => ch.Id == chapter.Id))
+                {
+                    await UpdateBook(book.Id);
+                    return;
+                }
+            }
         }
 
         [RelayCommand]
@@ -80,6 +89,17 @@ namespace ChaptersMobileApp.ViewModels
             await MapEntities(books);
         }
 
+        private async Task UpdateBook(int bookId)
+        {
+            var book = Books.Single(x => x.Id ==  bookId);
+            var chapters = await _webApiService.GetChapters(book.Id);
+            book.Chapters.Clear();
+            foreach (var chapter in chapters.Where(x => !x.IsRead).OrderBy(x => x.Number).Take(3))
+            {
+                book.Chapters.Add(new() { Id = chapter.Id, Title = chapter.Title.Trim(), IsRead = chapter.IsRead });
+            }
+
+        }
         private async Task MapEntities(IEnumerable<GetBooksResult> result)
         {
             Books.Clear();

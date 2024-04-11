@@ -15,6 +15,7 @@ namespace ChaptersMobileApp.ViewModels
     {
         private readonly IWebApiService _webApiService;
         private int _chapterId;
+        private string? username;
 
         [ObservableProperty]
         private string _title;
@@ -40,6 +41,17 @@ namespace ChaptersMobileApp.ViewModels
         {
             await _webApiService.RateComment(comment.Id, false);
             await Update();
+        }
+
+        [RelayCommand]
+        public async Task Return()
+        {
+            var navigationParameter = new Dictionary<string, object>
+            {
+                { "return", true },
+                { "username", username }
+            };
+            await Shell.Current.GoToAsync("..", navigationParameter);
         }
 
         [RelayCommand]
@@ -93,28 +105,26 @@ namespace ChaptersMobileApp.ViewModels
 
         public async void ApplyQueryAttributes(IDictionary<string, object> query)
         {
+            if (query.TryGetValue("username", out var usernameObj))
+            {
+                username = (string)usernameObj;   
+            }
+
             var chapterId = (int)query["chapterId"];
-            Title = (string)query["title"];
+            if (query.TryGetValue("title", out var titleObj))
+            {
+                Title = (string)titleObj;
+            }
+            else
+            {
+                var bookId = (int)query["bookId"];
+                var chapters = await _webApiService.GetChapters(bookId);
+                var chapter = chapters.Single(x => x.Id == chapterId);
+                Title = chapter.Title;
+            }
             _chapterId = chapterId;
 
-            var comments = await _webApiService.GetComments(chapterId);
-            CommentList.Clear();
-            foreach (var comment in comments)
-            {
-                CommentList.Add(
-                    new Comment(comment.Id,
-                        comment.AuthorId,
-                        comment.AuthorUsername,
-                        comment.Text,
-                        comment.Rating,
-                        comment.UserRating,
-                        0,
-                        0,
-                        null,
-                        comment.CreatedAt
-                    )
-                );
-            }
+            await Update();
 
             query.Clear();
         }

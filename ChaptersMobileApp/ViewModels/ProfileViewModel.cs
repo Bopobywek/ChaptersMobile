@@ -69,12 +69,12 @@ namespace ChaptersMobileApp.ViewModels
                 MyAccount = true;
                 Username = username;
 
-                Task.Run(async () => await UpdateBooks());
+                MainThread.InvokeOnMainThreadAsync(UpdateBooks);
             }
             else 
             {
                 MyAccount = false;
-                Task.Run(async () => await UpdateBooks());
+                MainThread.InvokeOnMainThreadAsync(UpdateBooks);
             }
 
         }
@@ -82,7 +82,21 @@ namespace ChaptersMobileApp.ViewModels
         [RelayCommand]
         private async Task ViewComments()
         {
-            await Shell.Current.GoToAsync("comments");
+            var navigationParameter = new Dictionary<string, object>
+            {
+                { "username", Username }                
+            };
+            await Shell.Current.GoToAsync("comments", navigationParameter);
+        }
+
+        [RelayCommand]
+        private async Task ViewReviews()
+        {
+            var navigationParameter = new Dictionary<string, object>
+            {
+                { "username", Username }
+            };
+            await Shell.Current.GoToAsync("reviewsList", navigationParameter);
         }
 
         [RelayCommand]
@@ -102,11 +116,23 @@ namespace ChaptersMobileApp.ViewModels
         [RelayCommand]
         private async Task OpenActivity()
         {
-            await Shell.Current.GoToAsync("activities");
+            var navigationParameter = new Dictionary<string, object>
+            {
+                { "username", Username }
+            };
+            await Shell.Current.GoToAsync("activities", navigationParameter);
         }
 
-
-
+        [RelayCommand]
+        private async Task OpenSubs()
+        {
+            var navigationParameter = new Dictionary<string, object>
+            {
+                { "username", Username },
+                { "userId", _userId }
+            };
+            await Shell.Current.GoToAsync("subsList", navigationParameter);
+        }
 
         [RelayCommand]
         private async Task ViewBooks(string type)
@@ -186,8 +212,8 @@ namespace ChaptersMobileApp.ViewModels
             if (query.TryGetValue("username", out object username))
             {
                 Username = (string)username;
-                _userId = (int)query["userId"];
-                Task.Run(async () => await UpdateBooks());
+                _userId = (int?)query["userId"];
+                MainThread.InvokeOnMainThreadAsync(UpdateBooks);
                 query.Clear();
             }
         }

@@ -14,7 +14,7 @@
         <local:UserRatingToMinusColorConverter x:Key="userRatingToMinusColor" />
     </ContentPage.Resources>
     <Grid>
-        <CollectionView Margin="20,0,20,0" ItemsSource="{Binding Comments}" SelectionMode="None">
+        <CollectionView x:Name="CommentsCollection" Margin="20,0,20,0" ItemsSource="{Binding Comments}" SelectionMode="Single" SelectedItem="{Binding SelectedComment}" SelectionChangedCommand="{Binding OpenCommentCommand}" SelectionChangedCommandParameter="{Binding SelectedItem, Source={x:Reference CommentsCollection}}">
             <CollectionView.ItemTemplate>
                 <DataTemplate>
                     <VerticalStackLayout>
@@ -34,7 +34,7 @@
                             <HorizontalStackLayout Margin="0,20,0,0" VerticalOptions="EndAndExpand" Grid.Row="3" Grid.Column="2" HorizontalOptions="EndAndExpand" Spacing="10">
                                 <Label Text="{Binding Rating}" FontSize="20" TextColor="{Binding Rating, Converter={StaticResource userRatingToColor}}" VerticalOptions="Center" />
                             </HorizontalStackLayout>
-                            <Label VerticalOptions="Center" HorizontalOptions="EndAndExpand" TextColor="Gray" Text="{Binding CreatedAt, StringFormat='{0:dd.MM.yyyy HH:mm}'}" Grid.Row="0" Grid.Column="3" />
+                            <Label VerticalOptions="Start" HorizontalOptions="EndAndExpand" TextColor="Gray" Text="{Binding CreatedAt, StringFormat='{0:dd.MM.yyyy HH:mm}'}" Grid.Row="0" Grid.Column="3" />
                             <Label Text="{Binding Text}" FontSize="Medium" Grid.ColumnSpan="3" Grid.Row="2" />
                         </Grid>
                         <Border StrokeThickness="1" />

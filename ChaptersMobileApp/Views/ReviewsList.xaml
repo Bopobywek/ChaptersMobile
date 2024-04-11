@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="ChaptersMobileApp.Views.ReviewsList"
+                          xmlns:local="clr-namespace:ChaptersMobileApp.Views.Converters"
+             xmlns:controls="clr-namespace:XGENO.Maui.Controls;assembly=Maui.Controls.RatingView"
+             xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
+
+             Title="Мои рецензии"
+Shell.BackgroundColor="{DynamicResource ChWhite}"
+Shell.TitleColor="Black"
+Shell.ForegroundColor="Black"
+ControlTemplate="{StaticResource pageTemplate}">
+
+    <Shell.BackButtonBehavior>
+        <BackButtonBehavior Command="{Binding ReturnCommand}"/>
+    </Shell.BackButtonBehavior>
+    <ContentPage.Resources>
+        <ResourceDictionary>
+            <toolkit:SelectedItemEventArgsConverter x:Key="SelectedItemEventArgsConverter" />
+            <local:UserRatingToColorConverter x:Key="userRatingToColor" />
+            <local:UserRatingToPlusColorConverter x:Key="userRatingToPlusColor" />
+            <local:UserRatingToMinusColorConverter x:Key="userRatingToMinusColor" />
+        </ResourceDictionary>
+    </ContentPage.Resources>
+    
+    <Grid>
+    <CollectionView Grid.Row="2" x:Name="ReviewsSection" ItemsSource="{Binding Reviews}" IsVisible="true" Margin="20,10,20,0">
+        <CollectionView.ItemTemplate>
+            <DataTemplate>
+                <VerticalStackLayout>
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="20*"/>
+                            <ColumnDefinition Width="80*"/>
+                        </Grid.ColumnDefinitions>
+
+                        <Label Text="{Binding Title}" Grid.Column="1" FontFamily="Bold" LineBreakMode="CharacterWrap" VerticalOptions="Center" FontSize="Large" />
+
+                        <HorizontalStackLayout  Grid.Column="0">
+                            <controls:RatingView
+                                            ItemCount="1"
+                                            ItemSize="30"
+                                            ItemSpacing="6"
+                                            Value="1"
+                                            RatedFillColor="{DynamicResource ChPink}"
+                                            Margin="0,7,0,0"
+                                            UnRatedFillColor="Transparent"
+                                            StrokeColor="{DynamicResource ChPink}"
+                                            StrokeWidth="1"/>
+                            <Label Text="{Binding AuthorBookRating}" LineBreakMode="CharacterWrap" VerticalOptions="Center" FontSize="Large" />
+                        </HorizontalStackLayout>
+                    </Grid>
+                    <Label Text="{Binding Text}" Margin="20,10,0,10" FontSize="Medium" LineBreakMode="CharacterWrap" />
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="*" />
+                        </Grid.ColumnDefinitions>
+                        <Label Text="{Binding AuthorUsername}" FontSize="Medium">
+                            <Label.GestureRecognizers>
+                                <TapGestureRecognizer Command="{Binding Source={x:Reference ReviewsSection}, Path=BindingContext.OpenUserCommand}" CommandParameter="{Binding .}" />
+                            </Label.GestureRecognizers>
+                        </Label>
+                        <HorizontalStackLayout Grid.Column="1" Margin="0,0,10,20" VerticalOptions="EndAndExpand" HorizontalOptions="EndAndExpand" Spacing="10">
+                            
+                            <Label Text="{Binding Rating}" TextColor="{Binding Rating, Converter={StaticResource userRatingToColor}}" FontSize="20" VerticalOptions="Center" />
+                            
+                        </HorizontalStackLayout>
+                    </Grid>
+                    <Border StrokeThickness="1" Margin="0,0,0,20" />
+                </VerticalStackLayout>
+            </DataTemplate>
+        </CollectionView.ItemTemplate>
+    </CollectionView>
+    </Grid>
+</ContentPage>

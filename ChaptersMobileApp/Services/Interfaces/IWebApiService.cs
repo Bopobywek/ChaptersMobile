@@ -33,5 +33,6 @@ namespace ChaptersMobileApp.Services.Interfaces
         Task<bool> Unsubscribe(int userId);
         Task<List<GetUserActivityResult>> GetUserActivities(string username);
         Task<List<GetUserActivityResult>> GetSubscriptionsActivities();
+        Task<List<GetUsersResult>> SearchUsers(string q);
     }
 }

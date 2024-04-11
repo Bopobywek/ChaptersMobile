@@ -4,6 +4,8 @@
              xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
              xmlns:controls="clr-namespace:XGENO.Maui.Controls;assembly=Maui.Controls.RatingView"
              x:Class="ChaptersMobileApp.Views.ProfilePage"
+             Shell.NavBarIsVisible="{Binding MyAccount, Converter={StaticResource InvertedBoolConverter}}"
+             Shell.ForegroundColor="Black"
              ControlTemplate="{StaticResource pageTemplate}">
     <ContentPage.Resources>
         <ResourceDictionary>
@@ -72,6 +74,9 @@
                 </Border>
                 <VerticalStackLayout Grid.Column="1" Spacing="-3">
                         <Border StrokeThickness="2">
+                            <Border.GestureRecognizers>
+                                <TapGestureRecognizer Command="{Binding OpenSubsCommand}"/>
+                            </Border.GestureRecognizers>
                             <Grid>
                                 <Grid.ColumnDefinitions>
                                     <ColumnDefinition Width="auto" />
@@ -137,7 +142,10 @@
                                 </Image>
                             </Grid>
                         </Border>
-                    <Border StrokeThickness="2">
+                        <Border StrokeThickness="2">
+                            <Border.GestureRecognizers>
+                                <TapGestureRecognizer Command="{Binding ViewReviewsCommand}" />
+                            </Border.GestureRecognizers>
                             <Grid>
                                 <Grid.ColumnDefinitions>
                                     <ColumnDefinition Width="auto" />

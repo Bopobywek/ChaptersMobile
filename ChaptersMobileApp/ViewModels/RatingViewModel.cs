@@ -17,6 +17,8 @@ namespace ChaptersMobileApp.ViewModels
     {
         [ObservableProperty]
         private bool _authorized = false;
+        [ObservableProperty]
+        private Book? _selectedBook = null;
 
         private readonly IWebApiService _webApiService;
         private readonly AuthorizationService _authorizationService;
@@ -33,10 +35,7 @@ namespace ChaptersMobileApp.ViewModels
 
         private void Update()
         {
-            Task.Run(async () =>
-            {
-                await UpdateBooks();
-            });
+            MainThread.InvokeOnMainThreadAsync(UpdateBooks);
         }
 
         [RelayCommand]
@@ -51,11 +50,23 @@ namespace ChaptersMobileApp.ViewModels
             }
         }
 
-        private async Task UpdateBooks()
+        [RelayCommand]
+        public async Task OpenBook(Book book)
+        {
+            var navigationParameter = new Dictionary<string, object>
+            {
+                { "book", book }
+            };
+
+            await Shell.Current.GoToAsync("bookView", navigationParameter);
+            SelectedBook = null;
+        }
+
+        public async Task UpdateBooks()
         {
             Authorized = (await SecureStorage.Default.GetAsync("username")) is not null;
             var books = await _webApiService.GetBooks();
-            var entites = books.Select((x, index) => new Book { Title = x.Title, Author = x.Author, Rating = x.Rating, Position = index + 1, BookStatus = x.BookStatus, Cover = x.Cover}).ToList();
+            var entites = books.Select((x, index) => new Book { Id = x.Id, Title = x.Title, Author = x.Author, Rating = x.Rating, Position = index + 1, BookStatus = x.BookStatus, Cover = x.Cover}).ToList();
             BookList.Clear();
             foreach (var entity in entites)
             { 

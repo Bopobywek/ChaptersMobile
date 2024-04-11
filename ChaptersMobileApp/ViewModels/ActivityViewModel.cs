@@ -1,4 +1,5 @@
 ﻿using ChaptersMobileApp.Models;
+using ChaptersMobileApp.Services.Interfaces;
 using CommunityToolkit.Mvvm.ComponentModel;
 using System;
 using System.Collections.Generic;
@@ -11,24 +12,40 @@ namespace ChaptersMobileApp.ViewModels
 {
     public partial class ActivityViewModel : ObservableObject, IQueryAttributable
     {
+        private readonly IWebApiService webApiService;
+
         public ObservableCollection<ActivityGroup> Activities { get; } = new();
 
-        public ActivityViewModel()
+        public ActivityViewModel(IWebApiService webApiService)
         {
-            
+            this.webApiService = webApiService;
         }
 
-        public void ApplyQueryAttributes(IDictionary<string, object> query)
+        public async void ApplyQueryAttributes(IDictionary<string, object> query)
         {
+            var username = (string)query["username"];
             query.Clear();
+            var activities = await webApiService.GetUserActivities(username);
+            var groups = new Dictionary<DateOnly, List<Activity>>();
+            foreach (var activity in activities)
+            {
+                var date = activity.CreatedAt.Date;
+                var dateOnly = new DateOnly(date.Year, date.Month, date.Day);
+                if (!groups.ContainsKey(dateOnly))
+                {
+                    groups[dateOnly] = new List<Activity>();
+                }
+                groups[dateOnly].Add(new Activity(activity.Id, activity.UserId, activity.Username, activity.Text, activity.CreatedAt));
+            }
             Activities.Clear();
-            Activities.Add(
-                    new ActivityGroup(new DateTimeOffset(2024, 3, 17, 12, 37, 7, TimeSpan.FromHours(3)), new List<Activity>
-                    {
-                        new Activity(1, 6, "Bopobywek12345", "начинает читать книгу \"Иллюзион\"", new DateTimeOffset(2024, 3, 14, 16, 24, 7, TimeSpan.FromHours(3))),
-                        new Activity(1, 6, "Bopobywek12345", "прочитывает главу \"Глава первая. Буря над стеклянным городом\" книги \"Иллюзион\"", new DateTimeOffset(2024, 3, 14, 16, 31, 7, TimeSpan.FromHours(3)))
-                    }.OrderByDescending(x => x.CreatedAt).ToList())
-            );
+            foreach (var kv in groups.OrderByDescending(x => x.Key))
+            {
+                Activities.Add(
+                    new ActivityGroup(new DateTimeOffset(kv.Key, new TimeOnly(0, 0), TimeSpan.Zero),
+                    kv.Value
+                    )
+                );
+            }
 
         }
     }

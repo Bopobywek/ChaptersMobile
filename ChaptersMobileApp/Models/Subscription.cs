@@ -11,6 +11,7 @@ namespace ChaptersMobileApp.Models
         public string Username {  get; set; }
         public string? AvatarUrl { get; set; }
         public int BooksCount { get; set; }
+        public int UserId { get; set; }
 
     }
 }

@@ -34,7 +34,10 @@ namespace ChaptersMobileApp.ViewModels
         private string _bookStatus;
         private bool _isChapterRating = false;
 
-        public ObservableCollection<string> Statuses { get; set; } = new ObservableCollection<string>
+        [ObservableProperty]
+        private Chapter _selectedChapter;
+
+        public ObservableCollection<string> Statuses { get; } = new ObservableCollection<string>
         {
             "Читаю",
             "Буду читать",
@@ -53,7 +56,7 @@ namespace ChaptersMobileApp.ViewModels
         {
             _webApiService = webApiService;
             _alertService = alertService;
-            Task.Run(Update);
+            MainThread.InvokeOnMainThreadAsync(Update);
         }
 
         [RelayCommand]
@@ -80,6 +83,7 @@ namespace ChaptersMobileApp.ViewModels
                 { "title", chapter.Title }
             };
             await Shell.Current.GoToAsync("viewChapter", navigationParameter);
+            SelectedChapter = null;
         }
 
         [RelayCommand]
@@ -87,6 +91,7 @@ namespace ChaptersMobileApp.ViewModels
         {
             var bookStatus = (BookStatus)(Statuses.IndexOf(status) + 1);
             await _webApiService.ChangeBookStatus(BookId, bookStatus);
+            await Update();
         }
 
         [RelayCommand]
@@ -185,13 +190,15 @@ namespace ChaptersMobileApp.ViewModels
             }
 
             var book = (Book)bookObj;
-            Title = book.Title;
-            Author = book.Author;
-            Rating = book.Rating;
-            UserRating = book.UserRating;
-            Cover = book.Cover;
-            BookStatus = book.BookStatus is Models.BookStatus.NotStarted ? "" : Statuses[(int)book.BookStatus - 1];
-            BookId = book.Id;
+            var bookResult = await _webApiService.GetBook(book.Id);
+            Title = bookResult.Title;
+            Author = bookResult.Author;
+            Rating = bookResult.Rating;
+            UserRating = bookResult.UserRating;
+            Cover = bookResult.Cover;
+            var idx = (int)bookResult.BookStatus - 1;
+            BookStatus = bookResult.BookStatus is Models.BookStatus.NotStarted ? "" : Statuses[idx];
+            BookId = bookResult.Id;
             
             await Update();
             query.Clear();
@@ -200,7 +207,13 @@ namespace ChaptersMobileApp.ViewModels
         private async Task Update()
         {
             var bookResult = await _webApiService.GetBook(BookId);
+            Title = bookResult.Title;
+            Author = bookResult.Author;
             Rating = bookResult.Rating;
+            UserRating = bookResult.UserRating;
+            Cover = bookResult.Cover;
+            var idx = (int)bookResult.BookStatus - 1;
+            BookStatus = bookResult.BookStatus is Models.BookStatus.NotStarted ? "" : Statuses[idx];
 
             var chapters = await _webApiService.GetChapters(BookId);
             Chapters.Clear();
