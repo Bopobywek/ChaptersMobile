@@ -3,7 +3,7 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="ChaptersMobileApp.Views.CommentsPage"
              xmlns:local="clr-namespace:ChaptersMobileApp.Views.Converters"
-             Title="Мои комментарии"
+             Title="Комментарии"
              Shell.BackgroundColor="{DynamicResource ChWhite}"
              Shell.TitleColor="Black"
              Shell.ForegroundColor="Black"

@@ -53,6 +53,7 @@ public partial class SubscriptionsPage : ContentPage
         ButtonSub.BackgroundColor = Colors.LightGray;
         SubscriptionsSections.IsVisible = false;
         searchBarUser.IsVisible = false;
+        MainThread.InvokeOnMainThreadAsync(_viewModel.UpdateSubscriptions);
         EventsSection.IsVisible = true;
     }
 

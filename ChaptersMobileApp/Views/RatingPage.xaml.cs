@@ -14,7 +14,13 @@ public partial class RatingPage : ContentPage
         this.viewModel = viewModel;
     }
 
-	private void OnTextChanged(object sender, TextChangedEventArgs args)
+    protected override void OnNavigatedTo(NavigatedToEventArgs args)
+    {
+        base.OnNavigatedTo(args);
+		MainThread.InvokeOnMainThreadAsync(viewModel.UpdateBooks);
+    }
+
+    private void OnTextChanged(object sender, TextChangedEventArgs args)
 	{
 		if (searchBar.Text.Length > 0)
 		{
