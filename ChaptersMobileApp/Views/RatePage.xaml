@@ -14,7 +14,7 @@
                 <ColumnDefinition Width="Auto" />
             </Grid.ColumnDefinitions>
             <Label Text="0" />
-            <Slider  x:Name="rateSlider" Grid.Column="1" Value="{Binding Rating}"  Minimum="0" Maximum="5" ValueChanged="Slider_ValueChanged" />
+            <Slider  x:Name="rateSlider" Grid.Column="1" Value="{Binding Rating}"  Minimum="1" Maximum="5" ValueChanged="Slider_ValueChanged" />
             <Label Text="5" Grid.Column="2" />
 
         </Grid>
